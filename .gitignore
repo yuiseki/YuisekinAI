@@ -1,5 +1,7 @@
 !tmp/.gitkeep
 tmp
+!checkpoints/.gitkeep
+checkpoints
 wandb
 /.venv
 /.mypy_cache

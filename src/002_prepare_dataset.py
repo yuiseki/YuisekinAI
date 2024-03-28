@@ -5,7 +5,7 @@ import os
 import time
 from pathlib import Path
 
-from litgpt import HFTokenizer
+from litgpt import Tokenizer
 from litgpt.data.prepare_starcoder import DataChunkRecipe
 from litdata.processing.data_processor import DataProcessor
 
@@ -26,42 +26,33 @@ dataset_list = [
 ]
 
 
-def format_number(num):
-    if abs(num) >= 10**12:  # Trillion
-        return "{:.2f}T".format(num / 10**12)
-    elif abs(num) >= 10**9:  # Billion
-        return "{:.2f}B".format(num / 10**9)
-    elif abs(num) >= 10**6:  # Million
-        return "{:.2f}M".format(num / 10**6)
-    else:
-        return str(num)
-
-
 class YuisekinAIDataRecipe(DataChunkRecipe):
-    def __init__(self, tokenizer: HFTokenizer, chunk_size: int):
+    def __init__(self, tokenizer: Tokenizer, chunk_size: int):
         super().__init__(chunk_size)
         self.tokenizer = tokenizer
         self.total_token_cnt = 0
 
-    def prepare_item(self):
-        for dataset_data in dataset_list:
-            print("start...", dataset_data)
-            dataset_id = dataset_data["id"]
-            dataset_config = dataset_data["config"]
-            if dataset_config is not None:
-                raw_dataset = load_dataset(dataset_id, dataset_config, split="train")
-            else:
-                raw_dataset = load_dataset(dataset_id, split="train")
-            if "filter" in dataset_data:
-                data_df = raw_dataset.to_pandas()
-                filter_field = dataset_data["filter"]["field"]
-                filter_value = dataset_data["filter"]["value"]
-                data_df = data_df[data_df[filter_field] == filter_value]
-                dataset = Dataset.from_pandas(data_df)
-                ds = dataset
-            else:
-                ds = raw_dataset
-            print("ds", ds)
+    def prepare_structure(self, input_dir):
+        return dataset_list
+
+    def prepare_item(self, dataset_data):
+        print("start...", dataset_data)
+        dataset_id = dataset_data["id"]
+        dataset_config = dataset_data["config"]
+        if dataset_config is not None:
+            raw_dataset = load_dataset(dataset_id, dataset_config, split="train")
+        else:
+            raw_dataset = load_dataset(dataset_id, split="train")
+        if "filter" in dataset_data:
+            data_df = raw_dataset.to_pandas()
+            filter_field = dataset_data["filter"]["field"]
+            filter_value = dataset_data["filter"]["value"]
+            data_df = data_df[data_df[filter_field] == filter_value]
+            dataset = Dataset.from_pandas(data_df)
+            ds = dataset
+        else:
+            ds = raw_dataset
+        print("ds", ds)
         if "aya" in dataset_id:
             for v in ds["inputs"]:
                 text_ids = self.tokenizer.encode(v, bos=False, eos=True)
@@ -81,7 +72,7 @@ def prepare_for_dataset(
 ) -> None:
     destination_path.mkdir(parents=True, exist_ok=True)
 
-    tokenizer = HFTokenizer(tokenizer_path)
+    tokenizer = Tokenizer(tokenizer_path)
     data_recipe = YuisekinAIDataRecipe(tokenizer=tokenizer, chunk_size=chunk_size)
     data_processor = DataProcessor(
         input_dir=None,
@@ -98,11 +89,11 @@ def prepare_for_dataset(
 
 
 def prepare(
-    destination_path: Path = Path("/data/YuisekinAI_data"),
+    destination_path: Path = Path("/data/pretrain_data/meta-llama/llama-2-7b-hf/"),
     # 2048 block size + 1 for causal (from LLama), 1024 blocks
     chunk_size: int = 2049 * 1024,
 ) -> None:
-    tokenizer_path = Path("./tmp/tokenizer.json")
+    tokenizer_path = Path("checkpoints/meta-llama/Llama-2-7b-hf")
     prepare_for_dataset(
         tokenizer_path=tokenizer_path,
         destination_path=destination_path,
