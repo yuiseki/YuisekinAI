@@ -46,9 +46,9 @@ def train(tokenizer, trainer):
             else:
                 counter = 0
                 for v in ds:
-                    # Skip if counter is odd number
+                    # Skip every 100th sentence to reduce the number of tokens
                     counter += 1
-                    if counter % 2 == 1:
+                    if counter % 100 != 0:
                         continue
                     yield v["text"]
 
@@ -57,7 +57,7 @@ def train(tokenizer, trainer):
 
 
 def main():
-    save_path = "./tmp/tokenizer.json"
+    save_path = "./checkpoints/YuisekinAI/tokenizer.json"
     vocab_size = 35000
 
     tokenizer = init_tokenizer()

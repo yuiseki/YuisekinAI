@@ -39,7 +39,7 @@ initial_checkpoint_dir:
 resume: false
 
 # Data-related arguments. If not provided, the default is ``litgpt.data.TinyLlama``.
-data: ./src/data/YuisekinAI
+data: litgpt.data.YuisekinAI
 
 # Training-related arguments. See ``litgpt.args.TrainArgs`` for details
 train:

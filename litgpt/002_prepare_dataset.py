@@ -89,11 +89,13 @@ def prepare_for_dataset(
 
 
 def prepare(
-    destination_path: Path = Path("/data/pretrain_data/meta-llama/llama-2-7b-hf/"),
+    # destination_path: Path = Path("/data/pretrain_data/meta-llama/llama-2-7b-hf/"),
+    destination_path: Path = Path("/data/pretrain_data/yuiseki/YuisekinAI/"),
     # 2048 block size + 1 for causal (from LLama), 1024 blocks
     chunk_size: int = 2049 * 1024,
 ) -> None:
-    tokenizer_path = Path("checkpoints/meta-llama/Llama-2-7b-hf")
+    # tokenizer_path = Path("checkpoints/meta-llama/Llama-2-7b-hf")
+    tokenizer_path = Path("checkpoints/YuisekinAI")
     prepare_for_dataset(
         tokenizer_path=tokenizer_path,
         destination_path=destination_path,
