@@ -39,7 +39,8 @@ initial_checkpoint_dir:
 resume: false
 
 # Data-related arguments. If not provided, the default is ``litgpt.data.TinyLlama``.
-data: litgpt.data.YuisekinAI
+data:
+  class_path: src.dataset.YuisekinAI
 
 # Training-related arguments. See ``litgpt.args.TrainArgs`` for details
 train:
@@ -109,7 +110,7 @@ devices: auto
 
 # Optional path to the tokenizer dir that was used for preprocessing the dataset. Only some data
 # module require this. (type: Optional[Path], default: null)
-tokenizer_dir: checkpoints/meta-llama/Llama-2-7b-hf
+tokenizer_dir: checkpoints/YuisekinAITokenizer
 
 # The name of the logger to send metrics to. (type: Literal['wandb', 'tensorboard', 'csv'], default: tensorboard)
 logger_name: wandb

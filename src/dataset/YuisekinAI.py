@@ -10,7 +10,7 @@ from litgpt.data import DataModule
 
 @dataclass
 class YuisekinAI(DataModule):
-    data_path: Union[str, Path] = Path("/data/pretrain_data/meta-llama/llama-2-7b-hf")
+    data_path: Union[str, Path] = Path("/data/pretrain_data/yuiseki/YuisekinAI/")
     seed: int = 42
     num_workers: int = 8
 
@@ -36,7 +36,6 @@ class YuisekinAI(DataModule):
             drop_last=True,
         )
 
-        # Mix SlimPajama data and Starcoder data with these proportions:
         train_dataloader = StreamingDataLoader(
             train_dataset, batch_size=self.batch_size, pin_memory=True, num_workers=self.num_workers, drop_last=True
         )
