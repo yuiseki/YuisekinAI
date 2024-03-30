@@ -18,9 +18,12 @@ for i in wikipedia_ja_dataset:
 
 aozorabunko_dataset = datasets.load_dataset("if001/aozorabunko-clean-sin", split="train")
 for i in aozorabunko_dataset:
-    if i["text"] == "" or i["text"] == "\n":
+    try:
+        if i["text"] == "" or i["text"] == "\n":
+            continue
+        print(i["text"])
+    except Exception:
         continue
-    print(i["text"])
 
 oscar_ja_dataset = datasets.load_dataset("if001/oscar_2023_filtered", split="train")
 for i in oscar_ja_dataset:
