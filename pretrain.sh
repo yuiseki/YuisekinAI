@@ -1,0 +1,11 @@
+python3 src/run_clm.py \
+  --model_name_or_path gpt2 \
+  --config_name gpt2-medium \
+  --output_dir checkpoints/YuisekinAI-mistral-300m \
+  --tokenizer_name checkpoints/YuisekinAITokenizer \
+  --trust_remote_code true \
+  --dataset_name wikitext \
+  --dataset_config_name wikitext-2-raw-v1 \
+  --do_train \
+  --do_eval \
+  --prediction_loss_only true \

@@ -4,7 +4,7 @@
 
 # The name of the model to pretrain. Choose from names in ``litgpt.config``. Mutually exclusive with
 # ``model_config``. (type: Optional[str], default: null)
-model_name: YuisekinAI-llama-0.1B
+# model_name:
 
 # A ``litgpt.Config`` object to define the model architecture. Mutually exclusive with
 # ``model_config``. (type: Optional[Config], default: null)
@@ -39,8 +39,7 @@ initial_checkpoint_dir:
 resume: false
 
 # Data-related arguments. If not provided, the default is ``litgpt.data.TinyLlama``.
-data:
-  class_path: src.dataset.YuisekinAI
+# data:
 
 # Training-related arguments. See ``litgpt.args.TrainArgs`` for details
 train:
