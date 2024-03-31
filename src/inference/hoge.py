@@ -3,7 +3,7 @@ import torch
 
 
 TOKENIZER_NAME = "checkpoints/YuisekinAITokenizer"
-MODEL_NAME = "./checkpoints/YuisekinAI-mistral-300M-FA2"
+MODEL_NAME = "./checkpoints/YuisekinAI-mistral-0.5B"
 torch.set_float32_matmul_precision("high")
 
 DEVICE = "cuda"
@@ -30,8 +30,8 @@ with torch.no_grad():
         do_sample=True,
         early_stopping=False,
         top_p=0.95,
-        top_k=5,
-        temperature=0.1,
+        top_k=20,
+        temperature=0.5,
         no_repeat_ngram_size=2,
         num_beams=3,
         repetition_penalty=1.2,
