@@ -35,5 +35,6 @@
     "fp16": true,
     "push_to_hub": false,
     "dataloader_num_workers": 8,
-    "torch_compile": true
+    "torch_compile": true,
+    "use_fast_tokenizer": false
 }
