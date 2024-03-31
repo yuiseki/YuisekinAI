@@ -16,7 +16,7 @@
     "lr_scheduler_type": "cosine",
     "weight_decay": 0.1,
     "adam_beta2": 0.95,
-    "num_train_epochs": 2,
+    "num_train_epochs": 1,
     "prediction_loss_only": true,
     "remove_unused_columns": false,
     "resume_from_checkpoint": false,
