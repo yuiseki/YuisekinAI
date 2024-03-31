@@ -1,7 +1,7 @@
 {
     "model_type": "gpt2",
     "config_name": "gpt2-medium",
-    "tokenizer_name": "./checkpoints/YuisekinAITokenizer",
+    "tokenizer_name": "./checkpoints/YuisekinAILlamaTokenizer-v0.1",
     "train_file": "./tmp/train.txt",
     "validation_file": "./tmp/test.txt",
     "output_dir": "./checkpoints/YuisekinAI-mistral-0.5B",
@@ -16,7 +16,7 @@
     "lr_scheduler_type": "cosine",
     "weight_decay": 0.1,
     "adam_beta2": 0.95,
-    "num_train_epochs": 1,
+    "num_train_epochs": 2,
     "prediction_loss_only": true,
     "remove_unused_columns": false,
     "resume_from_checkpoint": false,

@@ -1,7 +1,7 @@
 from transformers import LlamaTokenizer
 
 MODEL_PREFIX = "./tmp/YuisekinAI"
-OUTPUT_MODEL_DIR = "./checkpoints/YuisekinAITokenizer"
+OUTPUT_MODEL_DIR = "./checkpoints/YuisekinAILlamaTokenizer-v0.1"
 
 # Transformer API
 tokenizer = LlamaTokenizer(
@@ -10,7 +10,7 @@ tokenizer = LlamaTokenizer(
     bos_token="<s>",
     eos_token="</s>",
     pad_token="[PAD]",
-    legacy=False,
+    extra_ids=0,
     model_max_length=50000,
 )
 tokenizer.save_pretrained(OUTPUT_MODEL_DIR)
