@@ -4,7 +4,7 @@
     "tokenizer_name": "./checkpoints/YuisekinAILlamaTokenizer-v0.1",
     "train_file": "./tmp/train.txt",
     "validation_file": "./tmp/test.txt",
-    "output_dir": "./checkpoints/YuisekinAI-mistral-0.3B",
+    "output_dir": "./checkpoints/YuisekinAI-mistral-0.5B",
     "report_to": "wandb",
     "do_train": true,
     "do_eval": true,

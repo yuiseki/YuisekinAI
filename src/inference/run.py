@@ -1,9 +1,8 @@
-from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
-
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
 TOKENIZER_NAME = "checkpoints/YuisekinAITokenizer"
-MODEL_NAME = "./checkpoints/YuisekinAI-mistral-0.3B"
+MODEL_NAME = "./checkpoints/YuisekinAI-mistral-0.5B"
 torch.set_float32_matmul_precision("high")
 
 DEVICE = "cuda"
@@ -41,3 +40,6 @@ print(outputs.tolist()[0])
 outputs_txt = tokenizer.decode(outputs[0])
 
 print(outputs_txt)
+
+# model.push_to_hub("YuisekinAI-mistral-0.5B")
+# tokenizer.push_to_hub("YuisekinAI-mistral-0.5B")
