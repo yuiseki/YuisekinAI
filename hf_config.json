@@ -34,7 +34,8 @@
     "adam_epsilon": 1.0e-4,
     "fp16": true,
     "push_to_hub": false,
-    "dataloader_num_workers": 8,
+    "dataloader_num_workers": 32,
+    "preprocessing_num_workers": 32,
     "torch_compile": true,
     "use_fast_tokenizer": false
 }
