@@ -57,6 +57,7 @@ from transformers.utils.versions import require_version
 os.environ["WANDB_PROJECT"] = "infinite-tinyllama"
 os.environ["WANDB_LOG_MODEL"] = "false"
 os.environ["WANDB_WATCH"] = "all"
+os.environ["TORCH_LOGS"] = "recompiles"
 
 # Will error if the minimal version of Transformers is not installed. Remove at your own risks.
 check_min_version("4.35.0")
