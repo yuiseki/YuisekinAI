@@ -13,7 +13,7 @@ model_config:
   hf_config: {}
   scale_embeddings: false
   block_size: 2048
-  padded_vocab_size: 35000
+  padded_vocab_size: 50000
   #n_layer: 22
   n_layer: 6
   #n_head: 32

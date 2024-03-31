@@ -1,8 +1,6 @@
-from transformers import AutoModelForCausalLM, AutoTokenizer, TextStreamer
+from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 
-# from transformers import PreTrainedTokenizerFast
-import sentencepiece as spm
 
 TOKENIZER_NAME = "checkpoints/YuisekinAITokenizer"
 MODEL_NAME = "./checkpoints/YuisekinAI-mistral-300M-FA2"
@@ -15,15 +13,12 @@ if torch.cuda.is_available():
 else:
     print("cpu")
     DEVICE = "cpu"
-# DEVICE = "cpu"
 
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, use_fast=False)
 model = AutoModelForCausalLM.from_pretrained(
     MODEL_NAME,
     trust_remote_code=True,
 ).to(DEVICE)
-
-# streamer = TextStreamer(tokenizer)
 
 prompt = "大規模言語モデルとは、"
 
@@ -35,16 +30,14 @@ with torch.no_grad():
         do_sample=True,
         early_stopping=False,
         top_p=0.95,
-        top_k=50,
-        temperature=0.9,
-        # streamer=streamer,
+        top_k=5,
+        temperature=0.1,
         no_repeat_ngram_size=2,
         num_beams=3,
+        repetition_penalty=1.2,
     )
 
-# print(outputs[0])
 print(outputs.tolist()[0])
 outputs_txt = tokenizer.decode(outputs[0])
-# outputs_txt = tokenizer.decode_ids(outputs[0])
 
 print(outputs_txt)
