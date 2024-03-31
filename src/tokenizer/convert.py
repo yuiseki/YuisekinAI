@@ -12,5 +12,7 @@ tokenizer = LlamaTokenizer(
     pad_token="[PAD]",
     extra_ids=0,
     model_max_length=50000,
+    add_prefix_space=False,
+    legacy=False,
 )
 tokenizer.save_pretrained(OUTPUT_MODEL_DIR)
