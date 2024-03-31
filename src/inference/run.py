@@ -3,7 +3,7 @@ import torch
 
 
 TOKENIZER_NAME = "checkpoints/YuisekinAITokenizer"
-MODEL_NAME = "./checkpoints/YuisekinAI-mistral-0.5B"
+MODEL_NAME = "./checkpoints/YuisekinAI-mistral-0.3B"
 torch.set_float32_matmul_precision("high")
 
 DEVICE = "cuda"
