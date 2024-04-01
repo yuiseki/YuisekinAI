@@ -36,7 +36,6 @@ with torch.no_grad():
         repetition_penalty=1.2,
     )
 
-print(outputs.tolist()[0])
 outputs_txt = tokenizer.decode(outputs[0])
 
 print(outputs_txt)
