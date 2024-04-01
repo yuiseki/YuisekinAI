@@ -40,5 +40,8 @@ outputs_txt = tokenizer.decode(outputs[0])
 
 print(outputs_txt)
 
+model_size = sum(t.numel() for t in model.parameters())
+print(f"Model size: {model_size/1000**2:.1f}M parameters")
+
 # model.push_to_hub("YuisekinAI-mistral-1.1B")
 # tokenizer.push_to_hub("YuisekinAI-mistral-1.1B")

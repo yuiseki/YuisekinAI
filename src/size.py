@@ -16,4 +16,4 @@ model = MistralForCausalLM(config)
 print(model)
 
 model_size = sum(t.numel() for t in model.parameters())
-print(f"Mistral-300m size: {model_size/1000**2:.1f}M parameters")
+print(f"Model size: {model_size/1000**2:.1f}M parameters")
