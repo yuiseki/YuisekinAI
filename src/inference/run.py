@@ -2,7 +2,9 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 TOKENIZER_NAME = "checkpoints/YuisekinAITokenizer"
-MODEL_NAME = "./checkpoints/YuisekinAI-mistral-1.1B"
+BASE_DIR = "./checkpoints/"
+MODEL_NAME = "YuisekinAI-mistral-1.1B"
+MODEL_PATH = BASE_DIR + MODEL_NAME
 torch.set_float32_matmul_precision("high")
 
 DEVICE = "cuda"
@@ -13,7 +15,7 @@ else:
     print("cpu")
     DEVICE = "cpu"
 
-tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, use_fast=False)
+tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH, use_fast=False)
 model = AutoModelForCausalLM.from_pretrained(
     MODEL_NAME,
     trust_remote_code=True,
@@ -43,5 +45,5 @@ print(outputs_txt)
 model_size = sum(t.numel() for t in model.parameters())
 print(f"Model size: {model_size/1000**2:.1f}M parameters")
 
-# model.push_to_hub("YuisekinAI-mistral-1.1B")
-# tokenizer.push_to_hub("YuisekinAI-mistral-1.1B")
+# model.push_to_hub(MODEL_NAME)
+# tokenizer.push_to_hub(MODEL_NAME)
