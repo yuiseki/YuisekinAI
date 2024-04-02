@@ -413,14 +413,8 @@ def main():
         model = MistralForCausalLM.from_pretrained(
             pretrained_model_name_or_path=None,
             config=config,
-            cache_dir=model_args.cache_dir,
-            revision=model_args.model_revision,
-            token=model_args.token,
-            trust_remote_code=model_args.trust_remote_code,
-            torch_dtype=torch.float16,
-            low_cpu_mem_usage=model_args.low_cpu_mem_usage,
             state_dict=OrderedDict(),
-            use_flash_attention_2=True,
+            attn_implementation="flash_attention_2",
         )
         print("===== ===== ===== ===== ===== =====")
         print("===== ===== ===== ===== ===== =====")
