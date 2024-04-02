@@ -1,8 +1,8 @@
 {
     "model_type": "gpt2",
     "config_name": "gpt2-medium",
-    "model_name_or_path": "YuisekinAI-mistral-0.3B",
-    "output_dir": "./checkpoints/YuisekinAI-mistral-0.3B",
+    "model_name_or_path": "YuisekinAI-mistral-0.7B",
+    "output_dir": "./checkpoints/YuisekinAI-mistral-0.7B",
     "tokenizer_name": "./checkpoints/YuisekinAILlamaTokenizer-v0.1",
     "train_file": "./tmp/train.txt",
     "validation_file": "./tmp/test.txt",
