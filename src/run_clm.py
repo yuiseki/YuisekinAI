@@ -33,9 +33,8 @@ from typing import Optional
 import datasets
 import evaluate
 import torch
-from datasets import load_dataset
-
 import transformers
+from datasets import load_dataset
 from transformers import (
     CONFIG_MAPPING,
     MODEL_FOR_CAUSAL_LM_MAPPING,
@@ -398,9 +397,9 @@ def main():
         )
 
     if model_args.model_name_or_path:
-        torch_dtype = model_args.torch_dtype if model_args.torch_dtype in ["auto", None] else getattr(torch, model_args.torch_dtype)
-        from transformers import MistralForCausalLM, MistralConfig
         import json
+
+        from transformers import MistralConfig, MistralForCausalLM
 
         def load_config_from_json(config_file):
             with open(config_file, "r") as f:
@@ -409,18 +408,27 @@ def main():
             return config
 
         config = load_config_from_json(config_file="config.json")
+        from collections import OrderedDict
+
         model = MistralForCausalLM.from_pretrained(
-            model_args.model_name_or_path,
-            from_tf=bool(".ckpt" in model_args.model_name_or_path),
+            pretrained_model_name_or_path=None,
             config=config,
             cache_dir=model_args.cache_dir,
             revision=model_args.model_revision,
             token=model_args.token,
             trust_remote_code=model_args.trust_remote_code,
-            torch_dtype=torch_dtype,
+            torch_dtype=torch.float16,
             low_cpu_mem_usage=model_args.low_cpu_mem_usage,
+            state_dict=OrderedDict(),
             use_flash_attention_2=True,
         )
+        print("===== ===== ===== ===== ===== =====")
+        print("===== ===== ===== ===== ===== =====")
+        print("===== ===== ===== ===== ===== =====")
+        model_size = sum(t.numel() for t in model.parameters())
+        print(f"Model size: {model_size/1000**2:.1f}M parameters")
+        print("===== ===== ===== ===== ===== =====")
+        print("===== ===== ===== ===== ===== =====")
     else:
         model = AutoModelForCausalLM.from_config(config, trust_remote_code=model_args.trust_remote_code)
         n_params = sum({p.data_ptr(): p.numel() for p in model.parameters()}.values())
