@@ -415,7 +415,7 @@ def main():
             config=config,
             state_dict=OrderedDict(),
             attn_implementation="flash_attention_2",
-            torch_dtype=torch.float16,
+            torch_dtype=torch.float32,
         )
         print("===== ===== ===== ===== ===== =====")
         print("===== ===== ===== ===== ===== =====")
