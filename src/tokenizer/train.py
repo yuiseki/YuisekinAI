@@ -1,7 +1,6 @@
 # 参考:
 #  - https://zenn.dev/selllous/articles/transformers_pretrain_to_ft
 import sentencepiece as spm
-
 from datasets.arrow_dataset import Dataset
 from datasets.load import load_dataset
 
@@ -42,7 +41,7 @@ def ds_yielder():
             for v in ds:
                 # Skip every 100th sentence to reduce the number of tokens
                 counter += 1
-                if counter % 100 != 0:
+                if counter % 10 != 0:
                     continue
                 yield v["text"]
 
