@@ -4,50 +4,11 @@ import sentencepiece as spm
 from datasets.arrow_dataset import Dataset
 from datasets.load import load_dataset
 
-MODEL_PREFIX = "./tmp/YuisekinAI"
-
-dataset_list = [
-    {"id": "CohereForAI/aya_dataset", "config": None, "filter": {"field": "language_code", "value": "eng"}},
-    {"id": "CohereForAI/aya_dataset", "config": None, "filter": {"field": "language_code", "value": "jpn"}},
-    {"id": "wikimedia/wikipedia", "config": "20231101.en"},
-    {"id": "wikimedia/wikipedia", "config": "20231101.ja"},
-]
-
-
-def ds_yielder():
-    for dataset_data in dataset_list:
-        print("start...", dataset_data)
-        dataset_id = dataset_data["id"]
-        dataset_config = dataset_data["config"]
-        if dataset_config is not None:
-            raw_dataset = load_dataset(dataset_id, dataset_config, split="train")
-        else:
-            raw_dataset = load_dataset(dataset_id, split="train")
-        if "filter" in dataset_data:
-            data_df = raw_dataset.to_pandas()
-            filter_field = dataset_data["filter"]["field"]
-            filter_value = dataset_data["filter"]["value"]
-            data_df = data_df[data_df[filter_field] == filter_value]
-            dataset = Dataset.from_pandas(data_df)
-            ds = dataset
-        else:
-            ds = raw_dataset
-        print("ds", ds)
-        if "aya" in dataset_id:
-            for v in ds["inputs"]:
-                yield v
-        else:
-            counter = 0
-            for v in ds:
-                # Skip every 100th sentence to reduce the number of tokens
-                counter += 1
-                if counter % 10 != 0:
-                    continue
-                yield v["text"]
+MODEL_PREFIX = "./tmp/YuisekinAI-en"
 
 
 spm.SentencePieceTrainer.train(
-    sentence_iterator=ds_yielder(),
+    input="./tmp/text.txt",
     model_type="unigram",
     model_prefix=MODEL_PREFIX,  # 出力されるモデルのファイル名に使われる
     add_dummy_prefix=False,  # rinna-3.6bに習って、文章の先頭にスペースが追加されないように

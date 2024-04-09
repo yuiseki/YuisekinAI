@@ -1,9 +1,8 @@
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-TOKENIZER_NAME = "checkpoints/YuisekinAITokenizer"
 BASE_DIR = "./checkpoints/"
-MODEL_NAME = "YuisekinAI-mistral-1.1B"
+MODEL_NAME = "YuisekinAI-mistral-en-1.1B"
 MODEL_PATH = BASE_DIR + MODEL_NAME
 torch.set_float32_matmul_precision("high")
 
@@ -21,7 +20,7 @@ model = AutoModelForCausalLM.from_pretrained(
     trust_remote_code=True,
 ).to(DEVICE)
 
-prompt = "大規模言語モデルとは、"
+prompt = "Large Language Models (LLMs) is"
 
 inputs = tokenizer(prompt, add_special_tokens=False, return_tensors="pt").to(model.device)
 with torch.no_grad():
