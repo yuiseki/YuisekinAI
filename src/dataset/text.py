@@ -26,6 +26,18 @@ for data in dolphin_en_dataset:
     print(data["input"])
     print(data["output"])
 
+dolly_en_dataset = datasets.load_dataset("databricks/databricks-dolly-15k", split="train")
+for data in dolly_en_dataset:
+    print(data["instruction"])
+    print(data["context"])
+    print(data["response"])
+
+aya_dataset = datasets.load_dataset("CohereForAI/aya_dataset", split="train")
+for data in aya_dataset.filter(lambda x: x["language_code"] == "eng"):
+    print(data["inputs"])
+    print(data["targets"])
+
+
 """
 wikipedia_ja_dataset = datasets.load_dataset("wikimedia/wikipedia", "20231101.ja", split="train")
 for data in wikipedia_ja_dataset:
