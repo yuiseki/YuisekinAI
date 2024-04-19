@@ -15,11 +15,6 @@ for data in openmath_en_dataset:
     print(data["question"])
     print(data["generated_solution"])
 
-wizardlm_en_dataset = datasets.load_dataset("WizardLM/WizardLM_evol_instruct_70k", split="train")
-for data in wizardlm_en_dataset:
-    print(data["instruction"])
-    print(data["output"])
-
 dolphin_en_dataset = datasets.load_dataset("cognitivecomputations/dolphin", "flan1m-alpaca-uncensored", split="train")
 for data in dolphin_en_dataset:
     print(data["instruction"])
