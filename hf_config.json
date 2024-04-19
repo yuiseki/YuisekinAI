@@ -1,9 +1,9 @@
 {
     "model_type": "gpt2",
     "config_name": "gpt2-medium",
-    "model_name_or_path": "YuisekinAI-mistral-en-1.1B",
-    "output_dir": "./checkpoints/YuisekinAI-mistral-en-1.1B",
-    "tokenizer_name": "./checkpoints/YuisekinAILlamaTokenizer-en-v0.1",
+    "model_name_or_path": "YuisekinAI-mistral-en-1.1B-v0.2",
+    "output_dir": "./checkpoints/YuisekinAI-mistral-en-1.1B-v0.2",
+    "tokenizer_name": "./checkpoints/YuisekinAILlamaTokenizer-en-v0.2",
     "train_file": "./tmp/train.txt",
     "validation_file": "./tmp/test.txt",
     "report_to": "wandb",

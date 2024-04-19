@@ -1,7 +1,7 @@
 import datasets
 
 wikipedia_en_dataset = datasets.load_dataset("wikimedia/wikipedia", "20231101.en", split="train")
-for data in wikipedia_en_dataset:
+for data in wikipedia_en_dataset.filter(lambda item, idx: idx % 2 == 0, with_indices=True):
     # 空の行は除去
     # 改行のみの行は除去
     if data["text"] == "" or data["text"] == "\n":
