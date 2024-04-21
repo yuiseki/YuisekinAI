@@ -2,7 +2,7 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 BASE_DIR = "./checkpoints/"
-MODEL_NAME = "YuisekinAI-mistral-en-1.1B"
+MODEL_NAME = "YuisekinAI-mistral-en-1.1B-v0.2"
 MODEL_PATH = BASE_DIR + MODEL_NAME
 torch.set_float32_matmul_precision("high")
 

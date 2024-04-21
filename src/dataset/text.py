@@ -32,7 +32,6 @@ for data in aya_dataset.filter(lambda x: x["language_code"] == "eng"):
     print(data["inputs"])
     print(data["targets"])
 
-
 """
 wikipedia_ja_dataset = datasets.load_dataset("wikimedia/wikipedia", "20231101.ja", split="train")
 for data in wikipedia_ja_dataset:
