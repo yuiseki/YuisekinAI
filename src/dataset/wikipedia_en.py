@@ -1,7 +1,7 @@
 import datasets
 
-wikipedia_en_dataset = datasets.load_dataset("wikimedia/wikipedia", "20231101.en", split="train[10%:15%]")
-for data in wikipedia_en_dataset:
+dataset = datasets.load_dataset("wikimedia/wikipedia", "20231101.en", split="train[10%:15%]")
+for data in dataset:
     # remove empty lines
     if data["text"] == "":
       continue
