@@ -10,5 +10,18 @@
   "flake8.args": ["--max-line-length=148", "--ignore=E203"],
   "black-formatter.args": ["--line-length=148"],
   "python.defaultInterpreterPath": ".venv/bin/python",
-  "cSpell.words": ["bitsandbytes", "cuda", "dotenv", "scikit", "sentencepiece"]
+  "cSpell.words": [
+    "arxiv",
+    "bitsandbytes",
+    "blbooks",
+    "codeparrot",
+    "cuda",
+    "dotenv",
+    "Kaddour",
+    "minipile",
+    "openwebtext",
+    "scikit",
+    "sentencepiece",
+    "Skylion"
+  ]
 }
