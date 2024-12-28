@@ -1,1 +1,1 @@
-python src/dataset/text.py > tmp/text.txt
+python src/dataset/wikipedia_en.py > tmp/text.txt

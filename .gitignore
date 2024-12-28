@@ -5,3 +5,4 @@ checkpoints
 wandb
 /.venv
 /.mypy_cache
+.env
