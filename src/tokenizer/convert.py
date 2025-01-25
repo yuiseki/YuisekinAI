@@ -1,10 +1,10 @@
-from transformers import LlamaTokenizer
+from mistral_common.tokens.tokenizers.mistral import MistralTokenizer
 
 MODEL_PREFIX = "./tmp/YuisekinAI-en"
-OUTPUT_MODEL_DIR = "./checkpoints/YuisekinAILlamaTokenizer-en-v0.2"
+OUTPUT_MODEL_DIR = "./checkpoints/YuisekinAIMistralTokenizer-en-v0.2"
 
 # Transformer API
-tokenizer = LlamaTokenizer(
+tokenizer = MistralTokenizer(
     vocab_file=MODEL_PREFIX + ".model",
     unk_token="[UNK]",
     bos_token="<s>",
