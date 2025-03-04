@@ -53,6 +53,9 @@ from transformers.trainer_utils import get_last_checkpoint
 from transformers.utils import check_min_version, send_example_telemetry
 from transformers.utils.versions import require_version
 
+import torch._dynamo
+torch._dynamo.config.suppress_errors = True
+
 os.environ["WANDB_PROJECT"] = "infinite-tinyllama"
 os.environ["WANDB_LOG_MODEL"] = "false"
 os.environ["WANDB_WATCH"] = "all"

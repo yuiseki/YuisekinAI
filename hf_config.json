@@ -39,6 +39,6 @@
     "preprocessing_num_workers": 32,
     "torch_compile": true,
     "low_cpu_mem_usage": true,
-    "torch_dtype": "float16",
+    "torch_dtype": "bfloat16",
     "use_fast_tokenizer": false
 }
