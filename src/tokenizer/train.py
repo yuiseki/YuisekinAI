@@ -4,7 +4,7 @@ import sentencepiece as spm
 from datasets.arrow_dataset import Dataset
 from datasets.load import load_dataset
 
-MODEL_PREFIX = "./tmp/YuisekinAI-en"
+MODEL_PREFIX = "./tmp/YuisekinAI-0.2"
 
 
 spm.SentencePieceTrainer.train(

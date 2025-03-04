@@ -1,9 +1,9 @@
-from transformers import AutoTokenizer
+from transformers import XLNetTokenizer
 
-MODEL_PREFIX = "./tmp/YuisekinAI-en"
-OUTPUT_MODEL_DIR = "./checkpoints/YuisekinAIAutoTokenizer-en-v0.2"
+MODEL_PREFIX = "./tmp/YuisekinAI-0.2"
+OUTPUT_MODEL_DIR = "./checkpoints/YuisekinAIAutoTokenizer-v0.2"
 
-tokenizer = AutoTokenizer(
+tokenizer = XLNetTokenizer(
     vocab_file=MODEL_PREFIX + ".model",
     unk_token="[UNK]",
     bos_token="<s>",
