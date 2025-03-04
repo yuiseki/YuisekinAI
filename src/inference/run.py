@@ -2,7 +2,7 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 BASE_DIR = "./checkpoints/"
-MODEL_NAME = "YuisekinAI-mistral-en-1.1B-v0.2"
+MODEL_NAME = "YuisekinAI-mistral-1.6B-v0.2"
 MODEL_PATH = BASE_DIR + MODEL_NAME
 torch.set_float32_matmul_precision("high")
 
@@ -44,5 +44,5 @@ print(outputs_txt)
 model_size = sum(t.numel() for t in model.parameters())
 print(f"Model size: {model_size/1000**2:.1f}M parameters")
 
-model.push_to_hub(MODEL_NAME)
-tokenizer.push_to_hub(MODEL_NAME)
+#model.push_to_hub(MODEL_NAME)
+#tokenizer.push_to_hub(MODEL_NAME)
