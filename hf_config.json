@@ -34,11 +34,12 @@
     "load_best_model_at_end": true,
     "adam_epsilon": 1.0e-4,
     "fp16": true,
+    "bf16": false,
     "push_to_hub": false,
-    "dataloader_num_workers": 32,
-    "preprocessing_num_workers": 32,
+    "dataloader_num_workers": 16,
+    "preprocessing_num_workers": 16,
     "torch_compile": true,
     "low_cpu_mem_usage": true,
-    "torch_dtype": "bfloat16",
+    "torch_dtype": "float16",
     "use_fast_tokenizer": false
 }
