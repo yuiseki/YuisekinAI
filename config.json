@@ -18,7 +18,7 @@
   "sliding_window": 1024,
   "initializer_range": 0.02,
   "tie_word_embeddings": false,
-  "torch_dtype": "float16",
+  "torch_dtype": "bfloat16",
   "transformers_version": "4.35.2",
   "use_cache": true
 }

@@ -1,8 +1,8 @@
 {
     "model_type": "gpt2",
     "config_name": "gpt2-medium",
-    "model_name_or_path": "YuisekinAI-mistral-1.6B-v0.2",
-    "output_dir": "./checkpoints/YuisekinAI-mistral-1.6B-v0.2",
+    "model_name_or_path": "YuisekinAI-micro-0.6B-v0.1",
+    "output_dir": "./checkpoints/YuisekinAI-micro-0.6B-v0.1",
     "tokenizer_name": "./checkpoints/YuisekinAIAutoTokenizer-v0.2",
     "train_file": "./tmp/train.txt",
     "validation_file": "./tmp/test.txt",
@@ -34,12 +34,11 @@
     "load_best_model_at_end": true,
     "adam_epsilon": 1.0e-4,
     "fp16": true,
-    "bf16": false,
     "push_to_hub": false,
     "dataloader_num_workers": 16,
     "preprocessing_num_workers": 16,
     "torch_compile": true,
     "low_cpu_mem_usage": true,
-    "torch_dtype": "float16",
+    "torch_dtype": "bfloat16",
     "use_fast_tokenizer": false
 }
