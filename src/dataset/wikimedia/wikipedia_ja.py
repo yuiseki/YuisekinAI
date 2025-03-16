@@ -2,7 +2,7 @@ import datasets
 
 # https://huggingface.co/datasets/wikimedia/wikipedia
 
-dataset = datasets.load_dataset("wikimedia/wikipedia", "20231101.ja", split="train[:80%]")
+dataset = datasets.load_dataset("wikimedia/wikipedia", "20231101.ja", split="train", trust_remote_code=True)
 for data in dataset:
     # remove empty text
     if data["text"] == "":

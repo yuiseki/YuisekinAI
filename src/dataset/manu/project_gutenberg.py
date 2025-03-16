@@ -4,7 +4,7 @@ import datasets
 # License: https://www.gutenberg.org/policy/license.html
 # Size: 14.4 GB
 
-dataset = datasets.load_dataset("manu/project_gutenberg", split="en", trust_remote_code=True)
+dataset = datasets.load_dataset("manu/project_gutenberg", split="en[:30%]", trust_remote_code=True)
 for data in dataset:
     # remove empty text
     if data["text"] == "":

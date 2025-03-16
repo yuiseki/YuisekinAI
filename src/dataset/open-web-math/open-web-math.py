@@ -5,7 +5,7 @@ import datasets
 # Size: 27.4 GB
 # Token: 14.7 B
 
-dataset = datasets.load_dataset("open-web-math/open-web-math", split="train[:80%]", trust_remote_code=True)
+dataset = datasets.load_dataset("open-web-math/open-web-math", split="train[:20%]", trust_remote_code=True)
 for data in dataset:
     # remove empty text
     if data["text"] == "":

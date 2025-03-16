@@ -4,7 +4,7 @@ import datasets
 # License: MIT
 # Size: 3.18 GB
 
-dataset = datasets.load_dataset("JeanKaddour/minipile", split="train")
+dataset = datasets.load_dataset("JeanKaddour/minipile", split="train", trust_remote_code=True)
 for data in dataset:
     # remove empty text
     if data["text"] == "":

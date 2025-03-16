@@ -4,7 +4,7 @@ import datasets
 # License: CC BY-SA 3.0
 # Size: 71.8 GB
 
-dataset = datasets.load_dataset("wikimedia/wikipedia", "20231101.en", split="train[:40%]")
+dataset = datasets.load_dataset("wikimedia/wikipedia", "20231101.en", split="train[:40%]", trust_remote_code=True)
 for data in dataset:
     # remove empty text
     if data["text"] == "":
