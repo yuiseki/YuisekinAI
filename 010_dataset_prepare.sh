@@ -11,9 +11,9 @@ python src/dataset/manu/project_gutenberg.py > tmp/text.txt
 python src/dataset/globis-university/aozorabunko-clean.py > tmp/text.txt
 # 22.13 GB
 python src/dataset/HuggingFaceH4/stack-exchange-preferences.py > tmp/text.txt
-# 55.21 GB
-python src/dataset/Skylion007/openwebtext.py > tmp/text.txt
 # 3.18 GB
 python src/dataset/JeanKaddour/minipile.py > tmp/text.txt
+# 55.21 GB
+# python src/dataset/Skylion007/openwebtext.py > tmp/text.txt
 # 895 GB
 # python src/dataset/cerebras/slimpajama.py > tmp/text.txt
