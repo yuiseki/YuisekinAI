@@ -10,7 +10,7 @@ python src/dataset/manu/project_gutenberg.py > tmp/project_gutenberg.txt
 python src/dataset/globis-university/aozorabunko-clean.py > tmp/aozorabunko-clean.txt
 # XX GB
 python src/dataset/codeparrot/github-code-clean.py > tmp/github-code-clean.txt
-# XX GB
+# 1.6 GB
 python src/dataset/HuggingFaceH4/stack-exchange-preferences.py > tmp/stack-exchange-preferences.txt
 # XX GB
 # python src/dataset/JeanKaddour/minipile.py > tmp/minipile.txt
