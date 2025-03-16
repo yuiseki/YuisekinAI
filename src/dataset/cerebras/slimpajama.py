@@ -13,16 +13,9 @@ for data in dataset:
     # remove text with only a newline character
     if data["text"] == "\n":
         continue
-    # remove RedPajamaCommonCrawl
-    if data["meta"]["redpajama_set_name"] == "RedPajamaCommonCrawl":
+    # NOTE: Use only RedPajamaGithub and RedPajamaStackExchange
+    if "redpajama_set_name" not in data["meta"]:
       continue
-    # remove RedPajamaC4
-    if data["meta"]["redpajama_set_name"] == "RedPajamaC4":
-      continue
-    # remove RedPajamaBook ≒ Book3
-    if data["meta"]["redpajama_set_name"] == "RedPajamaBook":
-      continue
-    # remove RedPajamaArXiv
-    if data["meta"]["redpajama_set_name"] == "RedPajamaArXiv":
+    if data["meta"]["redpajama_set_name"] not in ["RedPajamaGithub", "RedPajamaStackExchange"]:
       continue
     print(data["text"])

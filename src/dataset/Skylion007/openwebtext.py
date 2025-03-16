@@ -4,7 +4,7 @@ import datasets
 # License: CC0-1.0
 # Size: 55.21 GB
 
-dataset = datasets.load_dataset("Skylion007/openwebtext", split="train")
+dataset = datasets.load_dataset("Skylion007/openwebtext", split="train[:20%]", trust_remote_code=True)
 for data in dataset:
     # remove empty text
     if data["text"] == "":
