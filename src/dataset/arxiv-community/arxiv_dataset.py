@@ -1,6 +1,7 @@
 import datasets
 
 # https://huggingface.co/datasets/arxiv-community/arxiv_dataset
+# License: CC0-1.0
 
 dataset = datasets.load_dataset("arxiv-community/arxiv_dataset", split="train")
 for data in dataset:
