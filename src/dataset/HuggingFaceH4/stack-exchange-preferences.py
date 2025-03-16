@@ -4,10 +4,10 @@ import datasets
 # License: CC BY-SA 4.0
 # Size: 22.13 GB
 
-dataset = datasets.load_dataset("HuggingFaceH4/stack-exchange-preferences", split="train", trust_remote_code=True)
+dataset = datasets.load_dataset("HuggingFaceH4/stack-exchange-preferences", split="train[:10%]", trust_remote_code=True)
 for data in dataset:
     # remove empty text
-    if data["questioin"] == "":
+    if data["question"] == "":
       continue
     # remove text with only a newline character
     if data["question"] == "\n":
