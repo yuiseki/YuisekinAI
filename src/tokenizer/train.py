@@ -8,7 +8,7 @@ MODEL_PREFIX = "./tmp/YuisekinAI-0.2"
 
 
 spm.SentencePieceTrainer.train(
-    input="./tmp/text.txt",
+    input="./tmp/tokenizer_train.txt",
     model_type="unigram",
     model_prefix=MODEL_PREFIX,  # 出力されるモデルのファイル名に使われる
     add_dummy_prefix=False,  # rinna-3.6bに習って、文章の先頭にスペースが追加されないように
