@@ -1,10 +1,10 @@
 import datasets
 
-# https://huggingface.co/datasets/JeanKaddour/minipile
-# License: MIT
-# Size: 3.18 GB
+# https://huggingface.co/datasets/deepmind/math_dataset
+# License: Apache-2.0
+# Size: 130.65 GB
 
-dataset = datasets.load_dataset("JeanKaddour/minipile", split="train")
+dataset = datasets.load_dataset("deepmind/math_dataset", split="train", trust_remote_code=True)
 for data in dataset:
     # remove empty text
     if data["text"] == "":

@@ -4,6 +4,8 @@ import datasets
 
 # https://huggingface.co/datasets/codeparrot/github-code
 # https://huggingface.co/datasets/codeparrot/github-code-clean
+# License: Apache-2.0
+# Size: 32 GB?
 
 languages = ["Python", "Javascript", "TypeScript", "Shell", "SQL", "Markdown"]
 licenses = ["mit", "isc", "apache-2.0", "cc0-1.0", "bsd-2-clause", "bsd-3-clause"]

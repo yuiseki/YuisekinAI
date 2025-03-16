@@ -1,10 +1,10 @@
 import datasets
 
-# https://huggingface.co/datasets/JeanKaddour/minipile
-# License: MIT
-# Size: 3.18 GB
+# https://huggingface.co/datasets/globis-university/aozorabunko-clean
+# License: CC BY 4.0
+# Size: 382 MB
 
-dataset = datasets.load_dataset("JeanKaddour/minipile", split="train")
+dataset = datasets.load_dataset("globis-university/aozorabunko-clean", split="train", trust_remote_code=True)
 for data in dataset:
     # remove empty text
     if data["text"] == "":

@@ -1,6 +1,8 @@
 import datasets
 
 # https://huggingface.co/datasets/Skylion007/openwebtext
+# License: CC0-1.0
+# Size: 55.21 GB
 
 dataset = datasets.load_dataset("Skylion007/openwebtext", split="train")
 for data in dataset:
