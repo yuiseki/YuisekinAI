@@ -38,6 +38,16 @@
     "contiguous_gradients": true,
     "round_robin_gradients": true
   },
+  "communication_data_type": "fp16",
+  "tensorboard": {
+    "enabled": false
+  },
+  "memory_breakdown": true,
+  "activation_checkpointing": {
+    "partition_activations": false,
+    "cpu_checkpointing": false,
+    "profile": false
+  },
   "dump_state": true,
   "comms_logger": {
     "enabled": true,
