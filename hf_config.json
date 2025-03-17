@@ -40,5 +40,6 @@
     "torch_compile": true,
     "low_cpu_mem_usage": true,
     "torch_dtype": "bfloat16",
-    "use_fast_tokenizer": false
+    "use_fast_tokenizer": false,
+    "ddp_timeout": 7200
 }
