@@ -1,7 +1,7 @@
 {
     "model_type": "mistral",
-    "config_name": "YuisekinAI-micro-0.6B-v0.1",
-    "model_name_or_path": "YuisekinAI-micro-0.6B-v0.1",
+    "config_name": "./checkpoints/YuisekinAI-micro-0.6B-v0.1",
+    "model_name_or_path": "./checkpoints/YuisekinAI-micro-0.6B-v0.1",
     "output_dir": "./checkpoints/YuisekinAI-micro-0.6B-v0.1",
     "tokenizer_name": "./checkpoints/YuisekinAIAutoTokenizer-v0.2",
     "train_file": "./tmp/train.txt",
@@ -23,6 +23,7 @@
     "prediction_loss_only": true,
     "remove_unused_columns": false,
     "resume_from_checkpoint": true,
+    "overwrite_output_dir": true,
     "evaluation_strategy": "steps",
     "save_strategy": "steps",
     "save_total_limit": 6,
