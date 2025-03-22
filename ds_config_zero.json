@@ -4,8 +4,8 @@
     "loss_scale": 0,
     "loss_scale_window": 1000,
     "initial_scale_power": 16,
-    "hysteresis": 1,
-    "min_loss_scale": 0
+    "hysteresis": 2,
+    "min_loss_scale": 1
   },
   "bf16": {
     "enabled": false
@@ -29,16 +29,12 @@
     }
   },
   "zero_optimization": {
-    "stage": 2,
-    "offload_optimizer": {
-        "device": "cpu",
-        "pin_memory": true
-    },
+    "stage": 1,
     "allgather_partitions": true,
-    "allgather_bucket_size": 500000,
+    "allgather_bucket_size": 1e8,
     "overlap_comm": true,
     "reduce_scatter": true,
-    "reduce_bucket_size": 500000,
+    "reduce_bucket_size": 1e8,
     "contiguous_gradients": true,
     "round_robin_gradients": true
   },
@@ -63,5 +59,9 @@
   "gradient_clipping": "auto",
   "train_batch_size": "auto",
   "train_micro_batch_size_per_gpu": "auto",
-  "init_process_group_timeout": 7200
+  "init_process_group_timeout": 7200,
+  "checkpoint": {
+    "use_node_local_storage": true,
+    "load_universal": true
+  }
 }
