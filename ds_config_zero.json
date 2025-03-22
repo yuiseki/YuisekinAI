@@ -30,11 +30,15 @@
   },
   "zero_optimization": {
     "stage": 2,
+    "offload_optimizer": {
+        "device": "cpu",
+        "pin_memory": true
+    },
     "allgather_partitions": true,
-    "allgather_bucket_size": 2000000,
+    "allgather_bucket_size": 500000,
     "overlap_comm": true,
     "reduce_scatter": true,
-    "reduce_bucket_size": 2000000,
+    "reduce_bucket_size": 500000,
     "contiguous_gradients": true,
     "round_robin_gradients": true
   },
