@@ -8,5 +8,6 @@ export NCCL_SOCKET_IFNAME=lo
 export NCCL_IB_DISABLE=1
 export NCCL_P2P_DISABLE=1
 export CUDA_DEVICE_MAX_CONNECTIONS=1
+export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 
 deepspeed --no_local_rank src/run_clm.py hf_config.json --deepspeed --deepspeed_config ds_config_zero.json
