@@ -2,23 +2,23 @@ import datasets
 
 
 def remove_empty_lines(text: str) -> str:
+    """Remove empty lines from the given text."""
+
     return "\n".join([line for line in text.splitlines() if line.strip() != ""])
 
 
-wikipedia_en_dataset = datasets.load_dataset("wikimedia/wikipedia", "20231101.en", split="train[:5%]")
-for data in wikipedia_en_dataset:
-    # remove empty text
-    if data["text"] == "" or data["text"] == "\n":
-        continue
-    # 2つ以上連続する改行を除去する
-    text = remove_empty_lines(data["text"])
-    print(text)
+# https://huggingface.co/datasets/common-pile/comma_v0.1_training_dataset
+# Use streaming to avoid downloading the entire dataset locally.
+dataset = datasets.load_dataset(
+    "common-pile/comma_v0.1_training_dataset",
+    split="train",
+    streaming=True,
+)
 
-wikipedia_ja_dataset = datasets.load_dataset("wikimedia/wikipedia", "20231101.ja", split="train[:5%]")
-for data in wikipedia_ja_dataset:
-    # remove empty text
-    if data["text"] == "" or data["text"] == "\n":
+for data in dataset:
+    # Skip empty or whitespace-only texts
+    if not data["text"] or data["text"].isspace():
         continue
-    # 2つ以上連続する改行を除去する
+    # Remove consecutive blank lines
     text = remove_empty_lines(data["text"])
     print(text)
