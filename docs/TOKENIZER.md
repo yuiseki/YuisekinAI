@@ -46,17 +46,46 @@ segments naturally.
 | GeoNames cities15000, name and asciiname | 38,769 | CC BY 4.0 |
 | GeoNames admin2 | 57,041 | CC BY 4.0 |
 | GeoNames cities5000 | 77,667 | CC BY 4.0 |
+| Wikidata labels, Japanese | 223,550 distinct | CC0 |
 
 Natural Earth carries `name_ja` alongside `name_en` for both countries and
 first-level subdivisions, which is unusual and useful: multilingual place names
 in the public domain, with no attribution obligation at all.
 
-Two tiers suggest themselves:
+### Japanese names for places outside Japan
+
+Natural Earth carries `name_ja` for countries and first-level subdivisions but
+stops there, and the corpus measurement below found Japanese renderings of
+foreign places almost absent: 487 of 4,472 admin-1 names.
+
+Wikidata fills it, and is CC0. A local extract of Wikidata labels for
+OSM-linked entities (`/www/html/static/openstreetmap/names/wikidata_names.json`,
+482 MB, 2,198,819 entities) carries 242,929 Japanese labels, 223,550 of them
+distinct, and 191,598 English-to-Japanese pairs. Joined to the gazetteer by
+English name:
+
+| Target | Names | With a Japanese label |
+| --- | --- | --- |
+| GeoNames cities15000 | 32,128 | 14,864 (46%) |
+| GeoNames admin1 | 3,784 | 1,574 (42%) |
+
+These are established Japanese renderings, 四川省 and ヘルダーラント州 and
+ギュミュシュハーネ県, not transliterations produced on the fly.
+
+The file covers every kind of OSM-linked feature, not only administrative
+units, so it holds universities, stations and mountains alongside places and
+needs filtering through the gazetteer rather than being used whole.
+
+### Tiers
 
 | Tier | Contents | Tokens | Of 64k | Of 128k |
 | --- | --- | --- | --- | --- |
 | 1 | Natural Earth plus Japanese prefectures and municipalities | ~11,200 | 18% | 9% |
-| 1+2 | plus GeoNames cities15000 | ~50,000 | 78% | 39% |
+| 1+2 | plus GeoNames cities15000, English | ~50,000 | 78% | 39% |
+| 1+2+3 | plus their Japanese labels from Wikidata | ~66,400 | does not fit | 52% |
+
+Covering the world in both languages does not fit in 64k. It is a 96k or 128k
+decision, and the cost of that is in the embedding table, below.
 
 ## The cost is embeddings, not disk
 
