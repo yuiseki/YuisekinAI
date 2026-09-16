@@ -28,6 +28,54 @@ Article 13 and are in `DATA.md`.
 | J-STAGE open access | CC BY and variants | unknown | licences are per journal, see below |
 | Common Corpus Japanese subset | mixed open | unknown | not investigated |
 
+## Japanese text where place names occur in context
+
+Added 2026-09-17. A gazetteer supplies the list of names; it does not supply
+the sentences they live in. What the corpus needs is text where 渋谷区 appears
+because something happened there, not because it is row 13,002 of a table.
+
+Japan has an unusual advantage here: several of the densest such document sets
+fall outside copyright entirely under Article 13.
+
+| Source | Basis | Density | Blocker |
+| --- | --- | --- | --- |
+| Municipal ordinances and rules (例規集) | Article 13(1): 条例 are 法令 | very high | no single bulk endpoint |
+| Ministry notices on road and district boundaries | Article 13(2) | very high | published via the gazette, PDF |
+| JMA disaster-prevention XML (warnings and advisories) | Government Standard Terms of Use | very high | highly repetitive |
+| Municipal newsletters, regional disaster plans | varies by municipality | high | terms differ per site, not bulk-usable |
+
+### Municipal ordinances
+
+The strongest candidate. Ordinances and rules are 法令 and therefore outside
+copyright under Article 13(1), and every one of roughly 1,741 municipalities
+publishes a full 例規集. The text is dense in local place names by
+construction: ordinances define districts, enumerate town and section names,
+and give the addresses of facilities.
+
+Cross-municipality entry points exist, though none is confirmed to offer bulk
+download:
+
+- 条例Webアーカイブデータベース, Doshisha University: <https://jorei.slis.doshisha.ac.jp/>
+  search, comparison between municipalities, and repealed or amended ordinances
+- 全国条例データベース powered by eLen, Kagoshima University
+- 全国自治体例規集, RILG: <https://www.rilg.or.jp/htdocs/main/zenkoku_reiki/zenkoku_link.html>
+  a link directory to each municipality
+
+Since the underlying text cannot be the subject of copyright, collecting it
+from the municipalities' own sites carries no licensing obstacle. The obstacle
+is engineering: 1,741 sites, several hosted 例規集 systems, no common format.
+
+### JMA disaster-prevention XML
+
+Warnings and advisories are issued per municipality, so each bulletin puts
+municipality names into a sentence. A history database from December 2012
+onwards is hosted by NII at <https://agora.ex.nii.ac.jp/cps/weather/report/>,
+and the feed is registered on the e-Gov data portal.
+
+The caveat is repetition. Tens of thousands of near-identical bulletins
+deduplicate down to very little, and the context they supply, while real, is
+one context. Worth taking for name coverage, not for variety.
+
 ## Detail on each blocker
 
 Court judgments. Attractive in principle, since Article 13(3) puts them
