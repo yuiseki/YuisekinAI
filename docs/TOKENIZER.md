@@ -278,6 +278,53 @@ counts as its tests.
 Paris, Como and Padua are also flagged, which the threshold gets wrong. Forty-six
 names is few enough to read.
 
+## Coverage in Japanese Wikipedia, measured 2026-09-17
+
+1,389,467 articles, 6.88 GB of text, scanned against all 63,587 candidates.
+
+| Tier | Candidates | >=1 | >=10 | >=50 | >=200 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 10,620 | 9,468 | 6,569 | 4,057 | 2,177 |
+| 2, world cities in English | 39,379 | 17,336 | 4,814 | 1,675 | 601 |
+| 3, their Japanese renderings | 13,588 | 10,827 | 7,006 | 3,942 | 1,811 |
+| all | 63,587 | 37,631 | 18,389 | 9,674 | 4,589 |
+
+Japanese municipalities in particular, which is the question that was open:
+
+| Occurrences | Municipalities, of 1,892 |
+| --- | --- |
+| >=1 | 1,892 |
+| >=10 | 1,891 |
+| >=50 | 1,831 |
+| >=200 | 1,175 |
+| >=1000 | 709 |
+
+Median 448 occurrences, maximum 22,833.
+
+This is use, not enumeration. In the Japanese OSM Wiki the same names clustered
+at exactly two or three occurrences, the signature of a table; here the median
+is 448 across 1.39 million articles. Every municipality in Japan is written
+about, and written about in the company of its prefecture and its neighbours.
+
+Two consequences.
+
+Municipal ordinances were listed in `DATA_candidate.md` as the way to get
+Japanese place names into context, and as a considerable piece of engineering:
+1,741 sites, several hosted 例規集 systems, no common format. For this purpose
+they are not needed. They remain interesting for their own sake, as legally
+clean Article 13 text in a register nothing else covers, but not as the fix for
+a gap that Wikipedia has already closed.
+
+Tier 3 earns its place. 10,827 of 13,588 Japanese renderings of foreign places
+occur, 7,006 of them ten times or more, so Japanese Wikipedia genuinely uses
+ヘルダーラント州 rather than only Gelderland. Tier 2's English names reach only
+17,336 of 39,379 here, which a Japanese corpus would predict; judging them
+needs the English side.
+
+A threshold of ten occurrences in Japanese Wikipedia alone selects 18,389 of
+the 63,587 candidates, which is 29% of a 64k vocabulary and leaves room for
+language.
+
 ## Open
 
 - Vocabulary size, against measured compression on held-out Japanese prose,

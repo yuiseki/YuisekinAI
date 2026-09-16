@@ -46,7 +46,13 @@ fall outside copyright entirely under Article 13.
 
 ### Municipal ordinances
 
-The strongest candidate. Ordinances and rules are 法令 and therefore outside
+Downgraded 2026-09-17. This was listed as the way to get Japanese place names
+into context. Japanese Wikipedia turned out to have done it already: every one
+of the 1,892 municipalities occurs, with a median of 448 occurrences across
+1.39 million articles. See `TOKENIZER.md`.
+
+Still interesting on its own terms, as Article 13 text in a register nothing
+else in the corpus covers, but no longer load-bearing. Ordinances and rules are 法令 and therefore outside
 copyright under Article 13(1), and every one of roughly 1,741 municipalities
 publishes a full 例規集. The text is dense in local place names by
 construction: ordinances define districts, enumerate town and section names,
