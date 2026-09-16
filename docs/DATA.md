@@ -272,12 +272,67 @@ open questions in `DESIGN.md`.
 
 ### Share-alike
 
-Wikipedia ja is CC BY-SA, and it is likely to be the single largest Japanese
-source. Whether the share-alike obligation propagates to trained weights is
-unsettled. The Common Pile includes share-alike text; this project has not yet
-taken a position. A position must be taken and recorded here before any weights
-are released, because it determines what the parameters can be released under,
-and the OSAID requires those to be under OSI-approved terms.
+Settled 2026-09-17, as a position with reasons rather than as a certainty.
+
+Wikipedia ja is CC BY-SA and is the largest single source in this corpus. The
+OSM Wiki is CC BY-SA 2.0. WHLL, if used, is CC BY-SA. The question is whether
+that obligation reaches the trained weights, and it is not a small question:
+the OSAID requires parameters under OSI-approved terms, CC BY-SA is not an
+OSI-approved licence, so if share-alike propagated this project could not be
+Open Source AI at all.
+
+**Position: the weights are released under Apache-2.0.**
+
+Four things support that.
+
+Creative Commons says its own licences apply only where copyright permission is
+needed: "CC licenses apply only when copyright permission is required. If
+exceptions or limitations apply, then the CC license terms don't apply." They
+also say share-alike triggers "when works or adaptations of works are publicly
+shared", and that a model "based on ShareAlike content" shared publicly would
+have to carry the same licence. So CC's position is conditional on two things,
+and both are contestable here.
+<https://creativecommons.org/using-cc-licensed-works-for-ai-training-2/>
+
+Article 30-4 of the Japanese Copyright Act is the exception CC names. It
+permits use of a work where the purpose is not to enjoy its expression,
+information analysis included, without the rightsholder's permission. Training
+is the paradigm case. The proviso excludes uses that unreasonably prejudice the
+rightsholder's interests, the clear example being unauthorised use of a paid
+database; Wikipedia is not that. This project is carried out in Japan, so this
+is the law that applies to the training step.
+
+Weights are not plausibly adapted material. They do not contain the expression
+of the works, and the transformation is not one of the kinds CC 4.0 enumerates.
+This is argued both ways in the literature and is genuinely unsettled.
+
+Practice in exactly this corner is uniform. Comma v0.1-2T, trained on the
+Common Pile by the people who assembled it to be openly licensed, is released
+Apache-2.0. OLMo 2 is Apache-2.0. Neither model card treats share-alike as a
+live constraint.
+
+And there is a reductio. Essentially every open model is trained on Wikipedia.
+If share-alike reached weights, no such model could satisfy the OSAID, which
+would leave the definition describing an empty set. That cannot be what it
+means.
+
+What follows in practice:
+
+- Weights, code and the tokenizer: Apache-2.0.
+- Attribution is honoured regardless of whether it is owed. Every CC BY-SA
+  source is named in this file, which the OSAID requires anyway.
+- Any corpus artefact that redistributes the text itself, a token store
+  included, is a different question from the weights and is treated as
+  CC BY-SA.
+
+What this position does not claim. It is a judgement on an unsettled question,
+not a resolution of it; the contrary argument, that curated datasets and
+trained models can carry share-alike through the "adapted material" and
+"technical modification" concepts, is made seriously in the literature. Article
+30-4 is Japanese law and governs the training, not what a user elsewhere may
+do. If the position turns out to be wrong the remedy is relicensing the
+weights, which is recoverable, rather than rebuilding the corpus, which would
+not be.
 
 ### Volume
 
