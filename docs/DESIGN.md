@@ -223,6 +223,9 @@ docs/DESIGN.md    this file
 - Vocabulary size, and how it is split between the two languages. To be chosen
   by measuring compression on held-out text of both, not by assumption. The
   choice also sets whether the token store is `uint16` or `uint32`.
+  The held-out text includes Japanese place names and OSM tag keys, because the
+  vocabulary cannot be changed afterwards and post-training has to live with
+  it. See the geospatial section of `DATA.md`.
 - Unigram or BPE. BPE with byte fallback is the current assumption, but
   PLaMo-13B reaches 64K on Japanese with Unigram, so this deserves a
   measurement rather than a default.

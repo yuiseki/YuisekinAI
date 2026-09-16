@@ -88,6 +88,67 @@ been re-measured.
   is not obvious and has not been determined.
 - National Diet Library digitised full text. Licensing varies by collection.
 
+## Geospatial
+
+v0.3 aims at a model that knows OpenStreetMap tagging conventions. That is
+language knowledge: what `amenity=public_bath` means, when `shop` is used
+instead of `amenity`, what the Japanese community's conventions are. It is
+written as prose, in the OSM Wiki, and it belongs in pretraining.
+
+| Source | Licence | Est. size | Status |
+| --- | --- | --- | --- |
+| OSM Wiki, including JA: pages | CC BY-SA 2.0 | unknown | not started |
+
+### Not the OSM database
+
+The OSM Wiki and the OSM database are separate things under separate terms.
+The wiki text is CC BY-SA 2.0. The database is ODbL, and the OSM Foundation
+has a stated position on machine learning: a training set that is a substantial
+extraction of OSM data is a Derivative Database and must be offered under ODbL
+if used publicly, the model must be attributed in its documentation, and the
+model's predictions are not implicated.
+
+That is workable in itself, but it does not combine well with publishing a
+single token store containing every source at once, which would make the whole
+store a Derivative Database. The OSM database is therefore excluded from the
+pretraining corpus. Nothing is lost for the stated goal, because tagging
+conventions live in the wiki, not in the database.
+
+### Place hierarchy is a post-training concern
+
+Knowing that Harajuku is in Shibuya, Shibuya in Tokyo, and Tokyo in Japan is
+bounded, enumerable and structured: 47 prefectures, roughly 1,700
+municipalities, roughly 200,000 chome. It is available as CC0 from Wikidata
+(P131) and as CC BY 4.0 from Geolonia's japanese-addresses.
+
+It is not being put into the pretraining corpus. Two hundred thousand templated
+sentences are a rounding error inside a corpus of tens of billions of tokens,
+and reliable recall is reported to need varied exposure to each fact rather
+than repetition of one template, so teaching it this way would mean generating
+that variety first. Structured instruction data after pretraining is the
+better-matched tool, and there is published work on exactly this shape of
+problem.
+
+The related observation that language models answer spatial questions by
+recombining linguistic patterns rather than reasoning over geometry points the
+same way, as does the fact that this project's own deployment target already
+runs Nominatim, Overpass and a planet extract, which answer such questions
+exactly.
+
+Coordinates, geohashes and hierarchical cell indices are therefore out of scope
+for v0.3.
+
+### What this does decide about pretraining
+
+One thing, and it is irreversible after the fact. The tokenizer is fixed by
+pretraining, and post-training will see the world through whatever vocabulary
+it is given. If Japanese place names and OSM tag keys fragment badly, the
+post-training stage starts at a disadvantage it cannot undo.
+
+So the held-out text used to choose the vocabulary must include Japanese place
+names and OSM tag keys, not only general Japanese and English prose. See the
+open questions in `DESIGN.md`.
+
 ## Unresolved
 
 ### Share-alike
