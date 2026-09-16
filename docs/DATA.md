@@ -1,0 +1,115 @@
+# Data information
+
+Status: draft inventory. Sizes marked "est." have not been measured. Nothing
+here has been acquired or processed yet.
+
+The Open Source AI Definition requires a complete description of the data used
+to train the system, the provenance of that data, and a listing of where it can
+be obtained. This document is that description, and it is expected to grow into
+the authoritative record of the corpus rather than a summary written afterwards.
+
+This project additionally restricts itself to public domain and openly licensed
+text. The OSAID does not require this; it is a separate choice.
+
+## The constraint
+
+English openly licensed text is abundant. Japanese openly licensed text is not.
+This asymmetry, not compute and not disk, is what shapes the rest of the design.
+
+Storage is not a constraint. A 50B-token store is 100 GB at two bytes per
+token, against 908 GB free on the largest local volume, and the raw text is
+never written to disk.
+
+## English
+
+### Common Pile v0.1 / Comma v0.1 training dataset
+
+- Source: <https://huggingface.co/datasets/common-pile/comma_v0.1_training_dataset>
+- Paper: <https://arxiv.org/abs/2506.05209>
+- Basis: public domain and openly licensed text, assembled and documented by
+  EleutherAI across roughly 30 sources.
+- Size: 463.6B raw tokens in the main stage, 1,034.4B effective after the
+  published mixture weights, plus 176.2B raw in the cooldown stage.
+- Largest components: USPTO 157.4B, stackv2_edu 67.8B, peS2o 43.3B tokens.
+- Note: effectively English-only. The component sources are US patents, case
+  law, arXiv, PubMed and Stack Exchange.
+
+Only a fraction of this is needed. A 0.5B model trained at 100 tokens per
+parameter consumes 50B tokens, which is about 11% of the main stage.
+
+## Japanese
+
+Two distinct legal bases apply, and they are not interchangeable.
+
+### Basis 1: Article 13 of the Japanese Copyright Act
+
+Article 13 places four categories outside the reach of copyright entirely. They
+are not licensed; they cannot be the subject of rights in the first place.
+
+1. The Constitution and other laws and regulations
+2. Notices, directives, circulars and similar issued by national or local
+   government bodies, or by incorporated administrative agencies
+3. Judgments, decisions, orders and rulings of the courts, and the
+   determinations of administrative agencies made through procedures equivalent
+   to judicial proceedings
+4. Translations and compilations of the above, produced by those same bodies
+
+This is the Japanese counterpart to the US government works that make up much
+of the Common Pile, and it is the strongest foundation available here.
+
+| Source | Article 13 basis | Est. size | Status |
+| --- | --- | --- | --- |
+| e-Gov laws and regulations | 1 | est. 0.5 GB | not started |
+| Court judgments (courts.go.jp) | 3 | unknown | not started |
+| Notices and circulars | 2 | unknown | not started |
+
+Note that government white papers and academic works published by government
+bodies fall outside Article 13. They are covered by basis 2 instead.
+
+### Basis 2: open licences
+
+| Source | Licence | Est. size | Status |
+| --- | --- | --- | --- |
+| Wikipedia ja | CC BY-SA 4.0 | est. 6.4 GB | script exists (v0.2) |
+| Aozora Bunko | public domain | est. 0.65 GB | script exists (v0.2) |
+| Wikisource ja | CC BY-SA 4.0 and public domain | unknown | not started |
+| Wiktionary / Wikibooks / Wikinews / Wikivoyage ja | CC BY-SA 4.0 | unknown | not started |
+| Government white papers, e-Stat | Government Standard Terms of Use 2.0, compatible with CC BY 4.0 | unknown | not started |
+| J-STAGE open access articles under CC | CC BY and variants | unknown | not started |
+| Common Corpus Japanese subset | mixed open | unknown | not investigated |
+
+The two v0.2 sizes are the byte counts of the extracted text files recorded in
+`098_dataset_prepare.sh` on the `legacy/2024-pipeline` branch. They have not
+been re-measured.
+
+### Candidates needing a legal determination before use
+
+- Diet proceedings (国会会議録). Whether these fall under Article 13 paragraph 2
+  is not obvious and has not been determined.
+- National Diet Library digitised full text. Licensing varies by collection.
+
+## Unresolved
+
+### Share-alike
+
+Wikipedia ja is CC BY-SA, and it is likely to be the single largest Japanese
+source. Whether the share-alike obligation propagates to trained weights is
+unsettled. The Common Pile includes share-alike text; this project has not yet
+taken a position. A position must be taken and recorded here before any weights
+are released, because it determines what the parameters can be released under,
+and the OSAID requires those to be under OSI-approved terms.
+
+### Volume
+
+The Japanese sources above are unlikely to exceed the low tens of billions of
+tokens in total, and may be considerably less. The English side alone offers
+463B. Three consequences follow, and all three are design decisions rather than
+accidents:
+
+- the Japanese portion will be repeated for more epochs than the English
+- the mixture weights matter more than they would with abundant data on both
+  sides, and must be recorded here
+- the model size is bounded by the Japanese data, not by the budget
+
+Measuring the actual Japanese token count is therefore the first task, because
+it determines the model size, and the model size determines everything else.

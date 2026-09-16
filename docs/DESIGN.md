@@ -1,0 +1,150 @@
+# YuisekinAI v0.3 design
+
+Status: draft. Nothing in this document has been implemented yet.
+
+This document records the design decisions for the v0.3 rewrite. The v0.2
+pipeline is preserved on the `legacy/2024-pipeline` branch and is not carried
+forward.
+
+## Goals
+
+1. Satisfy the [Open Source AI Definition](https://opensource.org/ai/open-source-ai-definition):
+   publish the data information, the complete training and inference code, and
+   the model parameters, all under OSI-approved terms.
+2. Train only on openly licensed or public domain text. This is stricter than
+   the OSAID requires, and is a deliberate choice rather than an obligation.
+3. Cover Japanese as well as English. See `DATA.md` for why this is the
+   binding constraint on everything else.
+
+## Why v0.2 is not being extended
+
+`src/run_clm.py` is HuggingFace's fine-tuning example. Everything downstream
+inherits that assumption: the model is loaded from a checkpoint directory
+rather than constructed, the whole corpus is tokenized through `datasets.map`
+before training starts, and the run is configured by a large JSON of
+`TrainingArguments`.
+
+Pretraining from scratch needs different things:
+
+- a fixed token stream with a deterministic order
+- checkpoints that resume at token granularity, not epoch granularity
+- a measurement of model FLOPs utilisation, so that rented GPU time can be
+  budgeted before it is spent
+- an optimiser that is not AdamW, which the `Trainer` optimiser plumbing
+  does not accommodate cleanly
+
+## Decided
+
+### Token store
+
+Corpora are streamed, tokenized on the fly, and appended to `uint16` memmap
+shards. The intermediate plain-text files of v0.2 are not produced at all;
+they were the reason tokenizer preparation ran out of 96 GB of RAM.
+
+Each shard is accompanied by an index of document start offsets, so that
+packing can avoid letting one document predict the next.
+
+This constrains the tokenizer: the vocabulary must stay below 65536 so that a
+token fits in two bytes. At 50B tokens, the store is 100 GB.
+
+The store lives outside the repository and outside any git working tree.
+
+### Tokenizer
+
+Trained in-project, not adopted. Existing open-weight tokenizers either do not
+document their training data (which would import an undescribable component
+into an OSAID system) or are tuned for English only.
+
+Byte-level BPE via the `tokenizers` library, rather than the SentencePiece
+unigram plus `XLNetTokenizer` conversion of v0.2. Byte-level BPE has no unknown
+token, so the byte-fallback and special-token-id problems of v0.2 cannot recur.
+
+Special token ids are asserted by a test, not assumed.
+
+### Model
+
+Defined in-project as an `nn.Module` rather than instantiated from
+`MistralForCausalLM`. Three reasons: unused machinery such as sliding-window
+attention can be dropped; the optimiser needs parameters classified into matrix
+and non-matrix groups; and the forward pass should be legible in one file.
+
+Decoder-only transformer, pre-norm RMSNorm, SwiGLU, rotary position embeddings,
+grouped-query attention, QK normalisation, no biases. Embeddings are tied at
+small sizes. No sliding window.
+
+Weights are exported to HuggingFace format for distribution only. The training
+format is the project's own.
+
+### Precision
+
+bf16 throughout. The v0.2 configuration used fp16 with loss scaling, and its
+`adam_beta2: 0.9` and `adam_epsilon: 1.0e-4` are best read as divergence
+workarounds. Those revert to conventional values under bf16.
+
+### Optimiser and schedule
+
+Muon for the two-dimensional hidden weights, AdamW for embeddings, the output
+head, normalisation parameters and scalars.
+
+Warmup-stable-decay rather than cosine, so that training can be extended and
+intermediate checkpoints remain usable.
+
+### Checkpoints
+
+A checkpoint stores the model, the optimiser state, the step, the number of
+tokens consumed, the dataloader position and the RNG state, so that a run
+resumes exactly where it stopped.
+
+The OSAID asks for checkpoints from key intermediate stages of training and for
+the final optimiser state. These are therefore release artefacts, not scratch
+files, and the retention policy is chosen with that in mind.
+
+### Configuration
+
+One TOML file per run, read into dataclasses. Model shape, data mixture and
+optimisation live together in a single readable file that doubles as the record
+of the experiment. Model size is a set of numbers in that file, so that the same
+code runs a 10M-parameter smoke test, a 0.1B run on two consumer GPUs, and a
+larger run on rented hardware.
+
+### Distribution
+
+DDP first. FSDP2 when a run no longer fits, and only then.
+
+### Tests
+
+The pipeline is developed and tested on hardware that cannot pretrain. That is
+workable because most of what can be wrong is testable at small scale:
+
+- tokenizer round-trip, and the identity of every special token id
+- memmap document offsets agreeing with the source document boundaries
+- packing not leaking the tail of one document into the next
+- a small model driven to near-zero loss on a single repeated batch
+
+The last of these is the cheapest insurance against discovering, an hour into
+rented GPU time, that the loss is not going down.
+
+## Layout
+
+```
+configs/          one TOML per run
+src/data/         corpus acquisition, one module per source
+src/tokenize/     tokenizer training, and the corpus to memmap pass
+src/model/        model definition
+src/train.py      training loop
+src/eval/         held-out loss and benchmarks
+src/export/       HuggingFace format export for distribution
+tests/
+docs/DATA.md      the OSAID data information
+docs/DESIGN.md    this file
+```
+
+## Open
+
+- The ratio of Japanese to English tokens, and how many epochs the Japanese
+  side is repeated for. Depends on how much Japanese text `DATA.md` turns up.
+- Vocabulary size, and how it is split between the two languages. To be chosen
+  by measuring compression on held-out text of both, not by assumption.
+- Whether share-alike licensed text is included. See `DATA.md`.
+- Target model size and token budget. Deliberately deferred; the configuration
+  format is designed so that this can be decided late.
