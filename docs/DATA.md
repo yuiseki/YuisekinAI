@@ -103,13 +103,37 @@ and the OSAID requires those to be under OSI-approved terms.
 
 The Japanese sources above are unlikely to exceed the low tens of billions of
 tokens in total, and may be considerably less. The English side alone offers
-463B. Three consequences follow, and all three are design decisions rather than
-accidents:
+463B.
 
-- the Japanese portion will be repeated for more epochs than the English
-- the mixture weights matter more than they would with abundant data on both
-  sides, and must be recorded here
-- the model size is bounded by the Japanese data, not by the budget
+This is not a problem to be worked around with a mixing ratio. It is a studied
+regime, and the published findings are specific enough to design against.
 
-Measuring the actual Japanese token count is therefore the first task, because
-it determines the model size, and the model size determines everything else.
+The M-cubed scaling law (<https://arxiv.org/abs/2410.12325>) covers exactly this
+shape: a scarce target language beside an abundant one. Its central result is
+that mixing both languages through a single stage is never the optimal recipe.
+The choice is between monolingual single-stage training, when the target corpus
+is large, and multilingual two-stage training, when it is scarce. Which one
+applies is set by the scarcity ratio, the size of the target corpus against the
+compute-optimal corpus size for the budget.
+
+For the two-stage recipe the paper puts almost no target language in the first
+stage and concentrates it in the last, and finds the ratios in between make
+little difference. The optimal number of epochs over the scarce corpus is
+approximately the compute-optimal corpus size divided by the target corpus
+size, so it is a consequence of scarcity rather than a free parameter. Related
+work on mixture pretraining under data constraints
+(<https://arxiv.org/abs/2605.12715>) reports scarce corpora being reused 15 to
+20 times before the returns stop justifying it, which is far past the roughly
+four epochs that earlier data-constrained work is usually remembered for.
+
+So the design consequences are:
+
+- English carries the warmup and the stable phase; Japanese is concentrated in
+  the decay. This is a stage boundary, not a mixture weight.
+- The Japanese corpus is repeated many times, and how many is derived from the
+  scarcity ratio rather than chosen.
+- The model size is bounded by the Japanese data, not by the budget.
+
+Every one of these needs the size of the Japanese corpus as its input.
+Measuring it is therefore the first task, and nothing downstream can be settled
+until it is done.

@@ -108,13 +108,56 @@ bf16 throughout. The v0.2 configuration used fp16 with loss scaling, and its
 `adam_beta2: 0.9` and `adam_epsilon: 1.0e-4` are best read as divergence
 workarounds. Those revert to conventional values under bf16.
 
-### Optimiser and schedule
+### Optimiser
 
 Muon for the two-dimensional hidden weights, AdamW for embeddings, the output
 head, normalisation parameters and scalars.
 
-Warmup-stable-decay rather than cosine, so that training can be extended and
-intermediate checkpoints remain usable.
+With a calibrated expectation. "Fantastic Pretraining Optimizers and Where to
+Find Them" (<https://arxiv.org/abs/2509.02046>) measures matrix-based
+optimisers against an AdamW baseline that is tuned as carefully as they are,
+and finds 1.4x at 0.1B parameters falling to 1.1x at 1.2B. The widely repeated
+2x is an artefact of comparing against an undertuned AdamW. Muon is still worth
+taking here, because this project sits at the small end where the gain is
+largest, but it is worth roughly one and a half times the tokens, not twice.
+
+Two methodological rules follow from the same paper and apply to every
+comparison this project makes:
+
+- Muon's hyperparameters are tuned for Muon. Inheriting AdamW's is the mistake
+  that produces inflated numbers, in both directions.
+- Optimisers are compared at the end of a completed decay, never at an
+  intermediate checkpoint. Rankings flip during learning rate decay.
+
+Dion3 (<https://arxiv.org/abs/2608.11612>) reports Muon's loss at up to 6x
+lower optimiser step time. The saving is in distributed communication, so it is
+not a priority at single-node scale, but it is the thing to watch if this
+project ever runs wide.
+
+### Schedule
+
+Warmup-stable-decay rather than cosine, so that the number of steps need not be
+fixed in advance, training can be extended, and checkpoints taken during the
+stable phase remain usable.
+
+The decay shape is 1-sqrt, which is the strongest of the published decay curves
+rather than the linear or cosine decay that WSD is usually drawn with.
+
+The stable phase is 80 to 90 percent of steps and is not cut short.
+
+### Training stages
+
+Not one mixture, but two stages. This is a data decision as much as a schedule
+decision, and the reasoning is in `DATA.md`: for a scarce target language
+alongside an abundant one, a single mixed stage is never the optimal recipe.
+
+Stage one is English-dominant and occupies the warmup and the stable phase.
+Stage two concentrates Japanese and occupies the decay.
+
+The three things line up, which is the reason to build it this way: WSD's decay
+phase, the second stage of the M-cubed recipe, and the separate cooldown corpus
+that the Common Pile itself publishes alongside its main stage are the same
+window.
 
 ### Checkpoints
 
@@ -137,6 +180,11 @@ larger run on rented hardware.
 ### Distribution
 
 DDP first. FSDP2 when a run no longer fits, and only then.
+
+This is also what torchtitan does: with `data_parallel_shard_degree = 1` it
+falls back to DDP through `torch.distributed._composable.replicate`, and shards
+with `fully_shard` above that. FSDP2 is now the centre of PyTorch-native
+training, so the upgrade path is the well-trodden one.
 
 ### Tests
 
@@ -168,8 +216,10 @@ docs/DESIGN.md    this file
 
 ## Open
 
-- The ratio of Japanese to English tokens, and how many epochs the Japanese
-  side is repeated for. Depends on how much Japanese text `DATA.md` turns up.
+- Where the boundary between stage one and stage two falls, how much Japanese
+  stage one carries, and how many epochs the Japanese corpus is repeated for.
+  All three follow from the scarcity ratio, which is not known until the
+  Japanese corpus is measured. See `DATA.md`.
 - Vocabulary size, and how it is split between the two languages. To be chosen
   by measuring compression on held-out text of both, not by assumption. The
   choice also sets whether the token store is `uint16` or `uint32`.
