@@ -44,22 +44,49 @@ they were the reason tokenizer preparation ran out of 96 GB of RAM.
 Each shard is accompanied by an index of document start offsets, so that
 packing can avoid letting one document predict the next.
 
-This constrains the tokenizer: the vocabulary must stay below 65536 so that a
-token fits in two bytes. At 50B tokens, the store is 100 GB.
+The element width is a tradeoff with the vocabulary size rather than a fixed
+rule. A vocabulary below 65536 fits `uint16`, which puts a 50B-token store at
+100 GB; above that the store is `uint32` and the same run costs 200 GB. There
+is 908 GB free on the largest local volume, so either is affordable, and the
+vocabulary should be chosen on how well it encodes Japanese and English rather
+than to fit a width. For reference, PLaMo-13B uses 64K and LLM-jp-4 uses
+between 100K and 256K.
 
 The store lives outside the repository and outside any git working tree.
 
 ### Tokenizer
 
 Trained in-project, not adopted. Existing open-weight tokenizers either do not
-document their training data (which would import an undescribable component
-into an OSAID system) or are tuned for English only.
+document their training data, which would import an undescribable component
+into an OSAID system, or are tuned for English only.
 
-Byte-level BPE via the `tokenizers` library, rather than the SentencePiece
-unigram plus `XLNetTokenizer` conversion of v0.2. Byte-level BPE has no unknown
-token, so the byte-fallback and special-token-id problems of v0.2 cannot recur.
+SentencePiece, as in v0.2, with BPE and byte fallback so that there is no
+unknown token. SentencePiece was not the cause of the v0.2 tokenizer problems.
+The conversion to `XLNetTokenizer` was: that class contributes its own special
+tokens and its own id conventions, which is where the mismatch between the
+trained piece ids and the model's `bos_token_id` and `eos_token_id` came from.
+
+So the conversion is removed from the training path entirely. The corpus-to-
+memmap pass calls SentencePiece directly. A HuggingFace-compatible wrapper is
+produced only at export time, for distribution, and is covered by a test that
+checks it against the SentencePiece model it was built from.
 
 Special token ids are asserted by a test, not assumed.
+
+The model is also exported to the FlatBuffers format (`.spm.fb`) read by the
+[SentencePiece Lite runtime](https://google.github.io/sentencepiece/lite/),
+which is part of upstream SentencePiece and Apache-2.0 licensed. That runtime
+is a ~45 KB stripped static library under 2k lines with no third-party
+dependencies, not even Protobuf or Abseil, and it mmaps the model so that heap
+use is 1.2 KB regardless of vocabulary size. It reports higher encode
+throughput than both the original library and HuggingFace Tokenizers.
+
+This matters twice. It makes the tokenizer deployable on the microcontroller
+and single-board hardware this project's author already works with, which
+changes what the released artefact is good for. And because the whole corpus is
+encoded exactly once on the way into the token store, encode throughput is
+directly the cost of the preprocessing pass;
+`PretokenizeAtSafeBoundaries()` exists to parallelise it.
 
 ### Model
 
@@ -144,7 +171,11 @@ docs/DESIGN.md    this file
 - The ratio of Japanese to English tokens, and how many epochs the Japanese
   side is repeated for. Depends on how much Japanese text `DATA.md` turns up.
 - Vocabulary size, and how it is split between the two languages. To be chosen
-  by measuring compression on held-out text of both, not by assumption.
+  by measuring compression on held-out text of both, not by assumption. The
+  choice also sets whether the token store is `uint16` or `uint32`.
+- Unigram or BPE. BPE with byte fallback is the current assumption, but
+  PLaMo-13B reaches 64K on Japanese with Unigram, so this deserves a
+  measurement rather than a default.
 - Whether share-alike licensed text is included. See `DATA.md`.
 - Target model size and token budget. Deliberately deferred; the configuration
   format is designed so that this can be decided late.
