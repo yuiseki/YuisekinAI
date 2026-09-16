@@ -95,9 +95,73 @@ language knowledge: what `amenity=public_bath` means, when `shop` is used
 instead of `amenity`, what the Japanese community's conventions are. It is
 written as prose, in the OSM Wiki, and it belongs in pretraining.
 
-| Source | Licence | Est. size | Status |
-| --- | --- | --- | --- |
-| OSM Wiki, including JA: pages | CC BY-SA 2.0 | unknown | not started |
+### Measured, 2026-09-16
+
+From the 2026-01-30 full-history dump (6.3 GB gzipped), taking the latest
+revision of each page. The dump carries roughly 88 revisions per page, so
+almost all of its size is history: 292,914 pages and 803 MB of current
+wikitext come out of it.
+
+Namespaces kept, after flattening wikitext to prose. Token counts are measured
+with the Qwen3 tokenizer used only as a measuring instrument, not as a
+candidate for this project.
+
+| Namespace | Contents | Pages | Wikitext | Prose kept | Tokens |
+| --- | --- | --- | --- | --- | --- |
+| 0 | main, English, includes Key: and Tag: | 81,960 | 350.5 MB | 55% | 84.4 M |
+| 3000 | Proposal, how conventions were decided | 2,581 | 15.3 MB | 33% | 1.25 M |
+| 212 | JA | 4,132 | 15.5 MB | 29% | 1.28 M |
+| 12 | Help | 33 | 11 KB | 46% | negligible |
+| | | | | | **87 M** |
+
+Namespaces not kept: User (127 MB), the wikibase Item and Property spaces
+(57 MB), Talk (41 MB), the other language namespaces DE, RU, ES, FR, IT, NL
+(104 MB together), Template, Category, File and Module.
+
+### The Japanese OSM Wiki is close to empty
+
+Of the 1.28 M tokens in the JA namespace, 41.5% contain Japanese characters.
+The rest is untranslated English left in place by partial translations. The
+genuinely Japanese OSM Wiki is therefore about **0.53 M tokens**.
+
+That is not a corpus. Even repeated twenty times it is 10 M tokens. Japanese
+tagging conventions cannot be taught from the Japanese OSM Wiki alone, and the
+design has to account for that rather than assume the JA namespace carries its
+weight. The English OSM Wiki, at 84 M tokens, is where the conventions actually
+live.
+
+### Cleaning is not a regex
+
+The OSM Wiki keeps its tagging knowledge inside wikitables and inside
+`{{Tag}}` and `{{Key}}` templates, not in paragraphs. A first pass with a
+Wikipedia-style cleaner that strips tables and templates reported that 89% of
+the corpus was markup. It was not: the cleaner was deleting the tag
+descriptions, which are table cells.
+
+`src/data/osm_wiki/clean.py` unwraps rather than strips, and
+`tests/test_osm_wiki_clean.py` pins the behaviour so the same mistake cannot
+return silently.
+
+### Existing work in this repository's orbit
+
+Three datasets already published by this project's author cover adjacent
+ground and are cached locally:
+
+| Dataset | Rows | Shape |
+| --- | --- | --- |
+| `yuiseki/osm-tag-corpus` | 31,913 | tag, key, value, lang, title, description, lead_sentences, related_terms, on, implies, status, count_all. 9,467 English and 2,033 Japanese. |
+| `yuiseki/text2geoql` | 4,815 | input, output. Natural language to query. |
+| `yuiseki/osm-tokyo23-questions` | 131 | question templates |
+
+`osm-tag-corpus` overlaps the wiki extraction above and is the tidied form of
+the same material, so using both would duplicate. `text2geoql` is
+post-training material, not pretraining material.
+
+One provenance question is open: `count_all` looks like it comes from taginfo,
+which derives from the OSM database. Aggregate counts are unlikely to be a
+substantial extraction under ODbL, but this project restricts itself to openly
+licensed sources, so the origin of that column has to be recorded here before
+the dataset is used.
 
 ### Not the OSM database
 
