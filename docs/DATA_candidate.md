@@ -179,6 +179,37 @@ largest single source in the corpus under the same terms. It does add to the
 reasons the share-alike question in `DATA.md` has to be answered before weights
 are released.
 
+Downloaded and measured 2026-09-17, the Japanese release
+(`WHLL-ja-CS20240304.HTML20240301`, 280 MB compressed, 1.1 GB expanded):
+
+| | |
+| --- | --- |
+| Articles | 200,906 |
+| Annotated mentions | 4,151,205, 20.7 per article |
+| Distinct surface forms | 245,482 |
+| Article text | 0.58 GB |
+| `coord.tsv` gazetteer | 326,823 titles with coordinates, aliases and redirects included |
+
+Each record is `{id, title, text, gold}` where `gold` is a list of
+`[start, end, surface, [lat, lon]]`: resolved mentions with character offsets
+into the text.
+
+Two things to weigh before using it.
+
+It resolves to coordinates, not to administrative codes, and what this project
+wants to teach is containment. Coordinates reverse-geocode to administrative
+units, and the deployment target already runs Nominatim, so this is work rather
+than an obstacle.
+
+Coverage is partial. Only 200,906 articles carry annotations, against
+1,389,467 in Japanese Wikipedia, and 898 of the 1,939 Japanese prefecture and
+municipality names appear as an annotated mention. Fewer than half. WHLL
+annotates where Wikipedia links, and Wikipedia links the first mention.
+
+One anomaly, unexplained. The most frequent annotated surface is 銚子市 at
+20,347 mentions, ahead of 東京都 at 13,842. That ordering is not plausible for
+Japanese Wikipedia and should be understood before the corpus is relied on.
+
 The code being MIT means the corpus can be regenerated against a current dump
 rather than taken as published. Note that WHLL reads the CirrusSearch dump and
 the Enterprise HTML dump, not `pages-articles.xml.bz2`.
