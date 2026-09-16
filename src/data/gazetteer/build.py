@@ -46,3 +46,20 @@ def split_by_script(names):
     for name in names:
         (cjk if CJK.search(name) else latin).append(name)
     return sorted(latin), sorted(cjk)
+
+
+def is_mostly_lowercase(name, lower_count, capitalised_count, minimum=200, ratio=0.5):
+    """Whether a Latin name occurs in the corpus mostly as an ordinary word.
+
+    Frequency alone cannot tell a common word from a common place name: Germany
+    and Forest are both frequent in the OSM Wiki. Capitalisation can. A place
+    name is capitalised wherever it appears; an ordinary word is not. Measured
+    on the OSM Wiki, Berlin sits at 0.03 and Germany at 0.04, while Date is at
+    0.87 and Forest at 0.75.
+
+    Names below `minimum` total occurrences are not judged: too few samples.
+    """
+    total = lower_count + capitalised_count
+    if total < minimum:
+        return False
+    return lower_count / total >= ratio

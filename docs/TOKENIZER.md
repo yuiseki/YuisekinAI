@@ -225,6 +225,59 @@ law-heavy, which inflates 東京都 and 中央区 specifically. Nine adversarial
 strings is not a measurement of the rate on ordinary text. All three of those
 need redoing at the real vocabulary size on a balanced sample.
 
+## The forced-token candidate list
+
+`src/data/gazetteer/forced_tokens.py` builds it, carrying the source and licence
+of every name, because the list is part of the Data Information and not merely
+an input to a training script. Built 2026-09-17:
+
+| Tier | Names |
+| --- | --- |
+| 1: Natural Earth plus Japanese prefectures and municipalities | 10,620 |
+| 2: GeoNames cities15000 and admin1, English | 39,379 |
+| 3: Japanese labels for those, from Wikidata | 13,588 |
+| total accepted | 63,587 |
+| rejected by the acceptability rules | 5,453 |
+
+63,587 is essentially a whole 64k vocabulary with nothing left for language, so
+the tiers are a cutoff to move rather than a list to take whole.
+
+### Telling a common word from a common place name
+
+Of 43,898 Latin candidates, how many collide with ordinary English?
+
+Counting frequency answers the wrong question. Filtering on words that occur
+500 or more times in the OSM Wiki flags 51 names, but the list mixes Along,
+Best, Come, Date, Down, Forest and Green, which are words, with Australia,
+Berlin, Dresden, Florida, France and Germany, which are frequent precisely
+because they are places.
+
+Capitalisation separates them cleanly. A place name is capitalised wherever it
+appears; an ordinary word is not. Measured on the OSM Wiki:
+
+| Name | Lowercase | Capitalised | Ratio |
+| --- | --- | --- | --- |
+| Berlin | 70 | 1,989 | 0.03 |
+| Germany | 165 | 3,936 | 0.04 |
+| Dresden | 94 | 3,440 | 0.03 |
+| Essen | 40 | 693 | 0.05 |
+| Forest | 2,395 | 810 | 0.75 |
+| Date | 4,049 | 580 | 0.87 |
+| Time | 4,366 | 574 | 0.88 |
+
+At a threshold of half, and ignoring names with fewer than 200 occurrences
+because a ratio from a handful of samples says nothing, 46 of 43,898 Latin
+candidates are flagged: Time, Date, Than, Auch, Same, Most, Para, Forest,
+Green, Along, Much, Down, Semi, Best, Come, Turbo, Mobile, Normal, Split, Save,
+Bank, Nice, Police and a couple of dozen more.
+
+So the English collision problem is real, is 0.1% of the candidates, and is now
+identifiable rather than feared. The rule is in `build.py` with the measured
+counts as its tests.
+
+Paris, Como and Padua are also flagged, which the threshold gets wrong. Forty-six
+names is few enough to read.
+
 ## Open
 
 - Vocabulary size, against measured compression on held-out Japanese prose,

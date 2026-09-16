@@ -8,7 +8,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src" / "data" / "gazetteer"))
 
-from build import acceptable, split_by_script
+from build import acceptable, is_mostly_lowercase, split_by_script
 
 
 def test_katakana_fragments_are_rejected():
@@ -38,3 +38,24 @@ def test_scripts_are_separated_for_scanning():
     latin, cjk = split_by_script(["Tokyo", "渋谷区", "Paris", "サバ州"])
     assert latin == ["Paris", "Tokyo"]
     assert cjk == ["サバ州", "渋谷区"]
+
+
+def test_place_names_are_not_mostly_lowercase():
+    # Counts measured on the OSM Wiki English namespace, 2026-09-17.
+    assert not is_mostly_lowercase("Berlin", 70, 1989)
+    assert not is_mostly_lowercase("Germany", 165, 3936)
+    assert not is_mostly_lowercase("Dresden", 94, 3440)
+    # Essen is also the German verb, and still reads as a place here.
+    assert not is_mostly_lowercase("Essen", 40, 693)
+
+
+def test_ordinary_words_that_are_also_places_are_flagged():
+    assert is_mostly_lowercase("Date", 4049, 580)
+    assert is_mostly_lowercase("Forest", 2395, 810)
+    assert is_mostly_lowercase("Time", 4366, 574)
+    assert is_mostly_lowercase("Nice", 476, 87)
+
+
+def test_rare_names_are_not_judged():
+    # A ratio computed from a handful of occurrences says nothing.
+    assert not is_mostly_lowercase("Obscureville", 9, 1)
