@@ -82,6 +82,71 @@ The two v0.2 sizes are the byte counts of the extracted text files recorded in
 `098_dataset_prepare.sh` on the `legacy/2024-pipeline` branch. They have not
 been re-measured.
 
+### Measured, 2026-09-16
+
+Sizes come from the dataset metadata, which is exact. Tokens are that size
+converted at a bytes-per-token ratio measured on a streamed sample, using the
+Qwen3 tokenizer as a measuring instrument only.
+
+| Source | Records | Bytes | Japanese chars | Bytes/token | Tokens |
+| --- | --- | --- | --- | --- | --- |
+| Wikipedia ja, 20231101 | 1,389,467 | 7.04 GB | 76% | 3.55 | 1.97 B |
+| Aozora Bunko, cleaned | 16,951 | 0.71 GB | 89% | 3.91 | 0.16 B |
+| OSM Wiki, JA namespace | 4,132 | 15.5 MB | 41% of tokens | 3.83 | 0.0005 B |
+| | | | | | **2.13 B** |
+
+Not yet measured, and all of them will add to this: e-Gov laws and
+regulations, court judgments, government notices, white papers and e-Stat,
+Wikisource and the other Japanese Wikimedia projects, J-STAGE open access.
+
+Caveat on the sample: it is the first 400 records of each stream, not a random
+draw, so the bytes-per-token figure could shift slightly on a full pass.
+
+### What 2.13 B tokens permits
+
+This is the number that bounds the model size, so it is worth working through.
+
+Assume a budget of 100 tokens per parameter, which is where small models are
+trained now, and take the reported useful reuse of a scarce corpus at 15 to 20
+epochs.
+
+Spreading Japanese evenly across the whole run, which is the design the M-cubed
+result told us not to use:
+
+| Model | Budget | Japanese epochs needed |
+| --- | --- | --- |
+| 0.1 B | 10 B | 4.7x |
+| 0.3 B | 30 B | 14.1x |
+| 0.5 B | 50 B | 23.5x |
+| 1.0 B | 100 B | 46.9x |
+
+On that design the project stops at roughly 0.3 B parameters. Anything larger
+asks the Japanese corpus for more repetition than repetition is worth.
+
+Concentrating Japanese in stage two instead, where stage two is 15% of the
+budget:
+
+| Model | Budget | Stage two | Japanese epochs needed |
+| --- | --- | --- | --- |
+| 0.1 B | 10 B | 1.5 B | 0.7x, Japanese does not even fill it |
+| 0.3 B | 30 B | 4.5 B | 2.1x |
+| 0.5 B | 50 B | 7.5 B | 3.5x |
+| 1.0 B | 100 B | 15 B | 7.0x |
+| 2.0 B | 200 B | 30 B | 14.1x |
+
+The ceiling moves from 0.3 B to somewhere near 2 B.
+
+So the two-stage recipe is not a refinement that buys a little loss. It is the
+difference between a Japanese corpus that bounds this project at 0.3 B
+parameters and one that does not bind until an order of magnitude later. That
+is worth restating because the design adopted it on the strength of a paper,
+before there was any measurement to check it against.
+
+Two things this does not say. Stage two need not be purely Japanese, and
+making it so would cost English and the OSM Wiki conventions that stage one
+taught. And the budget of 100 tokens per parameter is an assumption about
+money, not a property of the data.
+
 ### Candidates needing a legal determination before use
 
 - Diet proceedings (国会会議録). Whether these fall under Article 13 paragraph 2
