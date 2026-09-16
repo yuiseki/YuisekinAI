@@ -147,6 +147,65 @@ making it so would cost English and the OSM Wiki conventions that stage one
 taught. And the budget of 100 tokens per parameter is an assumption about
 money, not a property of the data.
 
+### Where the unmeasured sources actually are
+
+Surveyed 2026-09-17.
+
+Available now, no barrier:
+
+| Source | Where | Size | Basis |
+| --- | --- | --- | --- |
+| e-Gov laws and regulations | <https://laws.e-gov.go.jp/bulkdownload/>, 50 category files, XML | 308 MB XML | Article 13(1), plus Government Standard Terms of Use 2.0 |
+| e-Gov law API v2 | <https://laws.e-gov.go.jp/api/2/swagger-ui>, released 2025-03-19, free, no registration | per-law | same |
+| Wikisource ja | dumps.wikimedia.org, pages-articles | 77.4 MB bz2 | CC BY-SA 4.0, originals often public domain |
+| Wiktionary ja | same | 89.2 MB bz2 | CC BY-SA 4.0 |
+| Wikibooks ja | same | 28.5 MB bz2 | CC BY-SA 4.0 |
+| Wikinews ja | same | 9.6 MB bz2 | CC BY-SA 4.0 |
+| Wikivoyage ja | same | 5.8 MB bz2 | CC BY-SA 4.0 |
+| Wikiquote ja | same | 1.9 MB bz2 | CC BY-SA 4.0 |
+
+Blocked or needing work:
+
+Court judgments. Attractive in principle, since Article 13(3) puts them
+outside copyright entirely, and they would be the Japanese counterpart to the
+case law that bulks out the Common Pile. Two routes, neither usable as-is.
+
+- NII's 日本の判例HTMLデータ (<https://www.nii.ac.jp/dsc/idr/rdata/HANREI/>) is
+  67,313 cases from 1947 to 2026, 4.3 GB of HTML with CSV metadata and RDF.
+  This is by far the largest Japanese source found. But use is restricted to
+  academic research, access requires an application and review, the unit of
+  provision is the laboratory, and annual research reports are required.
+  Redistribution and model training are not addressed. Not usable for a
+  publicly released model.
+- courts.go.jp publishes judgments as PDFs with no bulk interface, so the
+  direct route means building a scraper and a PDF pipeline. Open data for
+  civil judgments is still in progress: of roughly 225,000 civil judgments in
+  2022, commercial databases carried 10,000 to 20,000.
+
+Official gazette (官報), which would cover the notices and circulars of
+Article 13(2). Digitised from 2025-04-01 under the law on publication of the
+gazette, with the old internet edition closed on 2025-03-31. Published as PDF
+at <https://kanpou.npb.go.jp/> with no stated bulk or text interface.
+
+J-STAGE. The WebAPI returns article listings rather than full text, and CC
+licences are set per journal rather than per article and include NC and ND
+variants that this project cannot use. Usable, but only after filtering.
+
+Government white papers and e-Stat: not yet surveyed.
+
+### What this means for the total
+
+The two immediately available groups are 308 MB of law XML and 212 MB of
+compressed Wikimedia sister projects. Neither is large next to the 7.04 GB of
+Wikipedia ja already measured. They are likely to move the Japanese total from
+2.13 B tokens to somewhere around 2.3 to 2.5 B, not past 3 B.
+
+The one source that would change the total materially is the 4.3 GB of court
+judgments, and the convenient route to it is closed by its terms of use.
+
+So the working figure for the scarcity calculation above should be treated as
+close to final rather than as a lower bound awaiting a large addition.
+
 ### Candidates needing a legal determination before use
 
 - Diet proceedings (国会会議録). Whether these fall under Article 13 paragraph 2
