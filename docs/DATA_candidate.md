@@ -148,6 +148,41 @@ store a Derivative Database. The OSM database is therefore excluded from the
 pretraining corpus. Nothing is lost for the stated goal, because tagging
 conventions live in the wiki, not in the database.
 
+### Available: the WHLL geoparsing corpus
+
+Surveyed 2026-09-17. Toponyms annotated in running Japanese text, which is what
+teaching the place hierarchy needs and what this project was about to build by
+hand.
+
+- Paper: <https://aclanthology.org/2024.lrec-main.168/>, LREC-COLING 2024
+- Project page: <https://www.lsta.media.kyoto-u.ac.jp/resource/data/WHLL/home-e.html>
+- Code: <https://github.com/ku-lsta/WHLL>, MIT
+
+The method is the one this project had independently arrived at: Wikipedia
+hyperlinks are hand-made toponym resolutions, so a link in running text is a
+free gold annotation. 1.3M articles, about 7.8 distinct location expressions
+each, and 45.6% of those expressions ambiguous.
+
+That ambiguity figure is worth holding against this project's own measurement.
+Only 2 of 1,892 Japanese municipality names are ambiguous, 伊達市 and 府中市.
+But 9,427 of 88,471 oaza base names are, 本町 appearing in 279 municipalities
+and 栄町 in 210, and 12 of 112 bare ward names are, 南区 in 13 cities. What
+appears in real text is far more ambiguous than the municipality list suggests.
+
+Licence: CC BY-SA 4.0 and GFDL, inherited from Wikipedia, not CC BY. The
+distribution includes article body text, so it is a genuine derivative and
+carries the share-alike obligation. Downloadable directly, with no application,
+no review and no academic-only restriction.
+
+This adds nothing to the licensing situation: Wikipedia ja is already the
+largest single source in the corpus under the same terms. It does add to the
+reasons the share-alike question in `DATA.md` has to be answered before weights
+are released.
+
+The code being MIT means the corpus can be regenerated against a current dump
+rather than taken as published. Note that WHLL reads the CirrusSearch dump and
+the Enterprise HTML dump, not `pages-articles.xml.bz2`.
+
 ### Deferred to post-training: the place hierarchy
 
 Knowing that Harajuku is in Shibuya, Shibuya in Tokyo, and Tokyo in Japan is
