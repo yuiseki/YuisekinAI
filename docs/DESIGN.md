@@ -211,6 +211,7 @@ src/eval/         held-out loss and benchmarks
 src/export/       HuggingFace format export for distribution
 tests/
 docs/DATA.md      the OSAID data information
+docs/DATA_candidate.md  sources surveyed, blocked, deferred or rejected
 docs/DESIGN.md    this file
 ```
 

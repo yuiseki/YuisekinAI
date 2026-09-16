@@ -1,15 +1,18 @@
 # Data information
 
-Status: draft inventory. Sizes marked "est." have not been measured. Nothing
-here has been acquired or processed yet.
+This is the Data Information component required by the Open Source AI
+Definition: a description of the data the system is trained on, its provenance,
+and where it can be obtained. It records what is in the corpus and what has been
+measured.
 
-The Open Source AI Definition requires a complete description of the data used
-to train the system, the provenance of that data, and a listing of where it can
-be obtained. This document is that description, and it is expected to grow into
-the authoritative record of the corpus rather than a summary written afterwards.
+Sources that are surveyed, blocked, deferred or rejected live in
+`DATA_candidate.md`. Nothing moves from that file into this one without a
+measurement and a licence.
 
 This project additionally restricts itself to public domain and openly licensed
 text. The OSAID does not require this; it is a separate choice.
+
+Status: no training run has been made. Every measurement below is dated.
 
 ## The constraint
 
@@ -19,6 +22,41 @@ This asymmetry, not compute and not disk, is what shapes the rest of the design.
 Storage is not a constraint. A 50B-token store is 100 GB at two bytes per
 token, against 908 GB free on the largest local volume, and the raw text is
 never written to disk.
+
+## The regime
+
+English openly licensed text is abundant, Japanese is not. That asymmetry is a
+studied regime rather than a problem to be papered over with a mixing ratio,
+and the published findings are specific enough to design against.
+
+The M-cubed scaling law (<https://arxiv.org/abs/2410.12325>) covers exactly this
+shape: a scarce target language beside an abundant one. Its central result is
+that mixing both languages through a single stage is never the optimal recipe.
+The choice is between monolingual single-stage training, when the target corpus
+is large, and multilingual two-stage training, when it is scarce. Which one
+applies is set by the scarcity ratio, the size of the target corpus against the
+compute-optimal corpus size for the budget.
+
+For the two-stage recipe the paper puts almost no target language in the first
+stage and concentrates it in the last, and finds the ratios in between make
+little difference. The optimal number of epochs over the scarce corpus is
+approximately the compute-optimal corpus size divided by the target corpus
+size, so it is a consequence of scarcity rather than a free parameter. Related
+work on mixture pretraining under data constraints
+(<https://arxiv.org/abs/2605.12715>) reports scarce corpora being reused 15 to
+20 times before the returns stop justifying it, which is far past the roughly
+four epochs that earlier data-constrained work is usually remembered for.
+
+The design consequences:
+
+- English carries the warmup and the stable phase; Japanese is concentrated in
+  the decay. This is a stage boundary, not a mixture weight.
+- The Japanese corpus is repeated many times, and how many is derived from the
+  scarcity ratio rather than chosen.
+- The model size is bounded by the Japanese data, not by the budget.
+
+What this costs in practice is worked out under "What 2.13 B tokens permits"
+below, now that the Japanese corpus has been measured.
 
 ## English
 
@@ -57,30 +95,24 @@ are not licensed; they cannot be the subject of rights in the first place.
 This is the Japanese counterpart to the US government works that make up much
 of the Common Pile, and it is the strongest foundation available here.
 
-| Source | Article 13 basis | Est. size | Status |
-| --- | --- | --- | --- |
-| e-Gov laws and regulations | 1 | est. 0.5 GB | not started |
-| Court judgments (courts.go.jp) | 3 | unknown | not started |
-| Notices and circulars | 2 | unknown | not started |
+No source resting on this basis is in the corpus yet. The candidates, and what
+blocks each of them, are in `DATA_candidate.md`.
 
 Note that government white papers and academic works published by government
 bodies fall outside Article 13. They are covered by basis 2 instead.
 
 ### Basis 2: open licences
 
-| Source | Licence | Est. size | Status |
-| --- | --- | --- | --- |
-| Wikipedia ja | CC BY-SA 4.0 | est. 6.4 GB | script exists (v0.2) |
-| Aozora Bunko | public domain | est. 0.65 GB | script exists (v0.2) |
-| Wikisource ja | CC BY-SA 4.0 and public domain | unknown | not started |
-| Wiktionary / Wikibooks / Wikinews / Wikivoyage ja | CC BY-SA 4.0 | unknown | not started |
-| Government white papers, e-Stat | Government Standard Terms of Use 2.0, compatible with CC BY 4.0 | unknown | not started |
-| J-STAGE open access articles under CC | CC BY and variants | unknown | not started |
-| Common Corpus Japanese subset | mixed open | unknown | not investigated |
+In the corpus, measured below:
 
-The two v0.2 sizes are the byte counts of the extracted text files recorded in
-`098_dataset_prepare.sh` on the `legacy/2024-pipeline` branch. They have not
-been re-measured.
+| Source | Licence |
+| --- | --- |
+| Wikipedia ja | CC BY-SA 4.0 |
+| Aozora Bunko | public domain |
+| OSM Wiki | CC BY-SA 2.0 |
+
+Further openly licensed Japanese sources that are surveyed but not yet in the
+corpus are in `DATA_candidate.md`.
 
 ### Measured, 2026-09-16
 
@@ -95,9 +127,10 @@ Qwen3 tokenizer as a measuring instrument only.
 | OSM Wiki, JA namespace | 4,132 | 15.5 MB | 41% of tokens | 3.83 | 0.0005 B |
 | | | | | | **2.13 B** |
 
-Not yet measured, and all of them will add to this: e-Gov laws and
-regulations, court judgments, government notices, white papers and e-Stat,
-Wikisource and the other Japanese Wikimedia projects, J-STAGE open access.
+Sources not yet in this table are in `DATA_candidate.md`, with what blocks
+each one. The survey there concludes that the ones actually available would
+bring the total to roughly 2.3 to 2.5 B rather than past 3 B, so this figure
+should be read as close to final rather than as a lower bound.
 
 Caveat on the sample: it is the first 400 records of each stream, not a random
 draw, so the bytes-per-token figure could shift slightly on a full pass.
@@ -146,71 +179,6 @@ Two things this does not say. Stage two need not be purely Japanese, and
 making it so would cost English and the OSM Wiki conventions that stage one
 taught. And the budget of 100 tokens per parameter is an assumption about
 money, not a property of the data.
-
-### Where the unmeasured sources actually are
-
-Surveyed 2026-09-17.
-
-Available now, no barrier:
-
-| Source | Where | Size | Basis |
-| --- | --- | --- | --- |
-| e-Gov laws and regulations | <https://laws.e-gov.go.jp/bulkdownload/>, 50 category files, XML | 308 MB XML | Article 13(1), plus Government Standard Terms of Use 2.0 |
-| e-Gov law API v2 | <https://laws.e-gov.go.jp/api/2/swagger-ui>, released 2025-03-19, free, no registration | per-law | same |
-| Wikisource ja | dumps.wikimedia.org, pages-articles | 77.4 MB bz2 | CC BY-SA 4.0, originals often public domain |
-| Wiktionary ja | same | 89.2 MB bz2 | CC BY-SA 4.0 |
-| Wikibooks ja | same | 28.5 MB bz2 | CC BY-SA 4.0 |
-| Wikinews ja | same | 9.6 MB bz2 | CC BY-SA 4.0 |
-| Wikivoyage ja | same | 5.8 MB bz2 | CC BY-SA 4.0 |
-| Wikiquote ja | same | 1.9 MB bz2 | CC BY-SA 4.0 |
-
-Blocked or needing work:
-
-Court judgments. Attractive in principle, since Article 13(3) puts them
-outside copyright entirely, and they would be the Japanese counterpart to the
-case law that bulks out the Common Pile. Two routes, neither usable as-is.
-
-- NII's 日本の判例HTMLデータ (<https://www.nii.ac.jp/dsc/idr/rdata/HANREI/>) is
-  67,313 cases from 1947 to 2026, 4.3 GB of HTML with CSV metadata and RDF.
-  This is by far the largest Japanese source found. But use is restricted to
-  academic research, access requires an application and review, the unit of
-  provision is the laboratory, and annual research reports are required.
-  Redistribution and model training are not addressed. Not usable for a
-  publicly released model.
-- courts.go.jp publishes judgments as PDFs with no bulk interface, so the
-  direct route means building a scraper and a PDF pipeline. Open data for
-  civil judgments is still in progress: of roughly 225,000 civil judgments in
-  2022, commercial databases carried 10,000 to 20,000.
-
-Official gazette (官報), which would cover the notices and circulars of
-Article 13(2). Digitised from 2025-04-01 under the law on publication of the
-gazette, with the old internet edition closed on 2025-03-31. Published as PDF
-at <https://kanpou.npb.go.jp/> with no stated bulk or text interface.
-
-J-STAGE. The WebAPI returns article listings rather than full text, and CC
-licences are set per journal rather than per article and include NC and ND
-variants that this project cannot use. Usable, but only after filtering.
-
-Government white papers and e-Stat: not yet surveyed.
-
-### What this means for the total
-
-The two immediately available groups are 308 MB of law XML and 212 MB of
-compressed Wikimedia sister projects. Neither is large next to the 7.04 GB of
-Wikipedia ja already measured. They are likely to move the Japanese total from
-2.13 B tokens to somewhere around 2.3 to 2.5 B, not past 3 B.
-
-The one source that would change the total materially is the 4.3 GB of court
-judgments, and the convenient route to it is closed by its terms of use.
-
-So the working figure for the scarcity calculation above should be treated as
-close to final rather than as a lower bound awaiting a large addition.
-
-### Candidates needing a legal determination before use
-
-- Diet proceedings (国会会議録). Whether these fall under Article 13 paragraph 2
-  is not obvious and has not been determined.
-- National Diet Library digitised full text. Licensing varies by collection.
 
 ## Geospatial
 
@@ -266,66 +234,6 @@ descriptions, which are table cells.
 `tests/test_osm_wiki_clean.py` pins the behaviour so the same mistake cannot
 return silently.
 
-### Existing work in this repository's orbit
-
-Three datasets already published by this project's author cover adjacent
-ground and are cached locally:
-
-| Dataset | Rows | Shape |
-| --- | --- | --- |
-| `yuiseki/osm-tag-corpus` | 31,913 | tag, key, value, lang, title, description, lead_sentences, related_terms, on, implies, status, count_all. 9,467 English and 2,033 Japanese. |
-| `yuiseki/text2geoql` | 4,815 | input, output. Natural language to query. |
-| `yuiseki/osm-tokyo23-questions` | 131 | question templates |
-
-`osm-tag-corpus` overlaps the wiki extraction above and is the tidied form of
-the same material, so using both would duplicate. `text2geoql` is
-post-training material, not pretraining material.
-
-One provenance question is open: `count_all` looks like it comes from taginfo,
-which derives from the OSM database. Aggregate counts are unlikely to be a
-substantial extraction under ODbL, but this project restricts itself to openly
-licensed sources, so the origin of that column has to be recorded here before
-the dataset is used.
-
-### Not the OSM database
-
-The OSM Wiki and the OSM database are separate things under separate terms.
-The wiki text is CC BY-SA 2.0. The database is ODbL, and the OSM Foundation
-has a stated position on machine learning: a training set that is a substantial
-extraction of OSM data is a Derivative Database and must be offered under ODbL
-if used publicly, the model must be attributed in its documentation, and the
-model's predictions are not implicated.
-
-That is workable in itself, but it does not combine well with publishing a
-single token store containing every source at once, which would make the whole
-store a Derivative Database. The OSM database is therefore excluded from the
-pretraining corpus. Nothing is lost for the stated goal, because tagging
-conventions live in the wiki, not in the database.
-
-### Place hierarchy is a post-training concern
-
-Knowing that Harajuku is in Shibuya, Shibuya in Tokyo, and Tokyo in Japan is
-bounded, enumerable and structured: 47 prefectures, roughly 1,700
-municipalities, roughly 200,000 chome. It is available as CC0 from Wikidata
-(P131) and as CC BY 4.0 from Geolonia's japanese-addresses.
-
-It is not being put into the pretraining corpus. Two hundred thousand templated
-sentences are a rounding error inside a corpus of tens of billions of tokens,
-and reliable recall is reported to need varied exposure to each fact rather
-than repetition of one template, so teaching it this way would mean generating
-that variety first. Structured instruction data after pretraining is the
-better-matched tool, and there is published work on exactly this shape of
-problem.
-
-The related observation that language models answer spatial questions by
-recombining linguistic patterns rather than reasoning over geometry points the
-same way, as does the fact that this project's own deployment target already
-runs Nominatim, Overpass and a planet extract, which answer such questions
-exactly.
-
-Coordinates, geohashes and hierarchical cell indices are therefore out of scope
-for v0.3.
-
 ### What this does decide about pretraining
 
 One thing, and it is irreversible after the fact. The tokenizer is fixed by
@@ -350,39 +258,8 @@ and the OSAID requires those to be under OSI-approved terms.
 
 ### Volume
 
-The Japanese sources above are unlikely to exceed the low tens of billions of
-tokens in total, and may be considerably less. The English side alone offers
-463B.
-
-This is not a problem to be worked around with a mixing ratio. It is a studied
-regime, and the published findings are specific enough to design against.
-
-The M-cubed scaling law (<https://arxiv.org/abs/2410.12325>) covers exactly this
-shape: a scarce target language beside an abundant one. Its central result is
-that mixing both languages through a single stage is never the optimal recipe.
-The choice is between monolingual single-stage training, when the target corpus
-is large, and multilingual two-stage training, when it is scarce. Which one
-applies is set by the scarcity ratio, the size of the target corpus against the
-compute-optimal corpus size for the budget.
-
-For the two-stage recipe the paper puts almost no target language in the first
-stage and concentrates it in the last, and finds the ratios in between make
-little difference. The optimal number of epochs over the scarce corpus is
-approximately the compute-optimal corpus size divided by the target corpus
-size, so it is a consequence of scarcity rather than a free parameter. Related
-work on mixture pretraining under data constraints
-(<https://arxiv.org/abs/2605.12715>) reports scarce corpora being reused 15 to
-20 times before the returns stop justifying it, which is far past the roughly
-four epochs that earlier data-constrained work is usually remembered for.
-
-So the design consequences are:
-
-- English carries the warmup and the stable phase; Japanese is concentrated in
-  the decay. This is a stage boundary, not a mixture weight.
-- The Japanese corpus is repeated many times, and how many is derived from the
-  scarcity ratio rather than chosen.
-- The model size is bounded by the Japanese data, not by the budget.
-
-Every one of these needs the size of the Japanese corpus as its input.
-Measuring it is therefore the first task, and nothing downstream can be settled
-until it is done.
+Measured at 2.13 B Japanese tokens, and unlikely to pass 2.5 B once the
+available candidates are added. What remains open is not the figure but two
+things downstream of it: the budget in tokens per parameter, which is a
+question about money rather than about data, and where the stage boundary
+falls, which the figure constrains but does not fix.
