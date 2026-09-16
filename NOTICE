@@ -1,0 +1,9 @@
+YuisekinAI
+Copyright 2024 yuiseki
+
+This product includes software developed at HuggingFace Inc.
+(https://github.com/huggingface/transformers).
+
+src/run_clm.py is derived from the `run_clm.py` example of HuggingFace
+Transformers, Copyright 2020 The HuggingFace Inc. team, licensed under the
+Apache License, Version 2.0.
