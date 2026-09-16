@@ -101,13 +101,24 @@ bounded, enumerable and structured: 47 prefectures, roughly 1,700
 municipalities, roughly 200,000 chome. It is available as CC0 from Wikidata
 (P131) and as CC BY 4.0 from Geolonia's japanese-addresses.
 
-It is not being put into the pretraining corpus. Two hundred thousand templated
+Revised 2026-09-17. The original decision here was to keep it out of
+pretraining entirely, on the grounds that two hundred thousand templated
 sentences are a rounding error inside a corpus of tens of billions of tokens,
-and reliable recall is reported to need varied exposure to each fact rather
-than repetition of one template, so teaching it this way would mean generating
-that variety first. Structured instruction data after pretraining is the
-better-matched tool, and there is published work on exactly this shape of
-problem.
+and that reliable recall needs varied exposure to each fact rather than
+repetition of one template.
+
+That reasoning holds against generating a synthetic corpus of sentences. It
+does not hold against a compact grouped listing, which is a different artefact
+with a different cost. A gazetteer emitted as `北海道: 札幌市 函館市 小樽市 …`
+encodes containment as adjacency, runs to a few megabytes rather than a
+generated corpus, and is exactly the form the OSM Wiki already carries on its
+per-prefecture list pages. Adjacency inside a cleanly grouped list is the
+signal a transformer takes up most readily, and it carries less ambiguity than
+the same relation scattered through prose.
+
+So the split is: a grouped gazetteer listing belongs in pretraining, and
+structured instruction data after pretraining consolidates it. Not one or the
+other.
 
 The related observation that language models answer spatial questions by
 recombining linguistic patterns rather than reasoning over geometry points the
