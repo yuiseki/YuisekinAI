@@ -7,9 +7,9 @@ content it was supposed to keep. These tests pin that behaviour down.
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src" / "data" / "osm_wiki"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src" / "data"))
 
-from clean import clean
+from wikitext import clean
 
 TABLE = """{| class="wikitable" width="100%"
 |- style="background-color:#F8F4C2"

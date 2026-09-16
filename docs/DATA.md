@@ -95,8 +95,14 @@ are not licensed; they cannot be the subject of rights in the first place.
 This is the Japanese counterpart to the US government works that make up much
 of the Common Pile, and it is the strongest foundation available here.
 
-No source resting on this basis is in the corpus yet. The candidates, and what
-blocks each of them, are in `DATA_candidate.md`.
+In the corpus, measured below:
+
+| Source | Article 13 basis | Licence also |
+| --- | --- | --- |
+| e-Gov laws and regulations | 1 | Government Standard Terms of Use 2.0 |
+
+Court judgments and the gazette rest on the same article but are not in the
+corpus. What blocks each is in `DATA_candidate.md`.
 
 Note that government white papers and academic works published by government
 bodies fall outside Article 13. They are covered by basis 2 instead.
@@ -109,33 +115,56 @@ In the corpus, measured below:
 | --- | --- |
 | Wikipedia ja | CC BY-SA 4.0 |
 | Aozora Bunko | public domain |
+| Wikisource, Wiktionary, Wikibooks, Wikinews, Wikivoyage, Wikiquote ja | CC BY-SA 4.0, Wikisource originals often public domain |
 | OSM Wiki | CC BY-SA 2.0 |
 
 Further openly licensed Japanese sources that are surveyed but not yet in the
 corpus are in `DATA_candidate.md`.
 
-### Measured, 2026-09-16
+### Measured
 
-Sizes come from the dataset metadata, which is exact. Tokens are that size
-converted at a bytes-per-token ratio measured on a streamed sample, using the
-Qwen3 tokenizer as a measuring instrument only.
+Wikipedia ja and Aozora Bunko were sized from dataset metadata, which is exact,
+and converted at a bytes-per-token ratio measured on a streamed sample. The
+others were downloaded and processed in full. Tokens are counted with the Qwen3
+tokenizer, used as a measuring instrument only.
 
-| Source | Records | Bytes | Japanese chars | Bytes/token | Tokens |
+| Source | Measured | Records | Text | Bytes/token | Japanese | Tokens |
+| --- | --- | --- | --- | --- | --- | --- |
+| Wikipedia ja, 20231101 | 2026-09-16 | 1,389,467 | 7.04 GB | 3.55 | 76% | 1.970 B |
+| e-Gov laws, data of 2026-09-16 | 2026-09-17 | 10,679 laws | 1.69 GB | 3.97 | 87% | 0.426 B |
+| Aozora Bunko, cleaned | 2026-09-16 | 16,951 | 0.71 GB | 3.91 | 89% | 0.160 B |
+| Wikimedia sister projects, ja | 2026-09-17 | 561,666 pages | 718 MB wikitext | | | 0.129 B |
+| OSM Wiki, JA namespace | 2026-09-16 | 4,132 | 15.5 MB | 3.83 | 41% | 0.0005 B |
+| | | | | | | **2.685 B** |
+
+The sister projects in detail:
+
+| Dump | Pages | Wikitext | Prose kept | Japanese | Tokens |
 | --- | --- | --- | --- | --- | --- |
-| Wikipedia ja, 20231101 | 1,389,467 | 7.04 GB | 76% | 3.55 | 1.97 B |
-| Aozora Bunko, cleaned | 16,951 | 0.71 GB | 89% | 3.91 | 0.16 B |
-| OSM Wiki, JA namespace | 4,132 | 15.5 MB | 41% of tokens | 3.83 | 0.0005 B |
-| | | | | | **2.13 B** |
+| Wikisource | 22,805 | 335.9 MB | 81% | 82% | 72.27 M |
+| Wiktionary | 506,781 | 214.6 MB | 33% | 36% | 23.46 M |
+| Wikibooks | 23,380 | 133.5 MB | 78% | 59% | 28.57 M |
+| Wikinews | 4,613 | 15.3 MB | 49% | 72% | 2.05 M |
+| Wikivoyage | 2,461 | 15.4 MB | 42% | 63% | 1.76 M |
+| Wikiquote | 1,626 | 3.8 MB | 85% | 63% | 0.89 M |
 
-Sources not yet in this table are in `DATA_candidate.md`, with what blocks
-each one. The survey there concludes that the ones actually available would
-bring the total to roughly 2.3 to 2.5 B rather than past 3 B, so this figure
-should be read as close to final rather than as a lower bound.
+Two of those need a second look before use rather than after. Wiktionary is
+only 36% Japanese by character and keeps only a third of its bytes as prose,
+because it is a dictionary full of foreign headwords and heavy templates.
+Wikibooks at 59% carries a lot of code and formulas. Neither is disqualified,
+but neither is 23 M and 29 M tokens of Japanese prose either.
 
-Caveat on the sample: it is the first 400 records of each stream, not a random
-draw, so the bytes-per-token figure could shift slightly on a full pass.
+e-Gov deserves a note on size. The bulk download page reports 308 MB for all
+law XML, which is the compressed figure; the archive is 323 MB and expands to
+3.61 GB of XML across 10,679 laws, yielding 1.69 GB of text. An earlier
+estimate in this project put it near 60 M tokens. It is 426 M.
 
-### What 2.13 B tokens permits
+Caveat on the two metadata-derived rows: the bytes-per-token sample is the
+first 400 records of each stream, not a random draw.
+
+Sources not yet in this table are in `DATA_candidate.md`.
+
+### What 2.69 B tokens permits
 
 This is the number that bounds the model size, so it is worth working through.
 
@@ -144,30 +173,24 @@ trained now, and take the reported useful reuse of a scarce corpus at 15 to 20
 epochs.
 
 Spreading Japanese evenly across the whole run, which is the design the M-cubed
-result told us not to use:
-
-| Model | Budget | Japanese epochs needed |
-| --- | --- | --- |
-| 0.1 B | 10 B | 4.7x |
-| 0.3 B | 30 B | 14.1x |
-| 0.5 B | 50 B | 23.5x |
-| 1.0 B | 100 B | 46.9x |
-
-On that design the project stops at roughly 0.3 B parameters. Anything larger
-asks the Japanese corpus for more repetition than repetition is worth.
+result told us not to use, the project stops at roughly 0.3 B parameters: a
+0.5 B model would need 18.6 epochs over the Japanese corpus and a 1 B model
+37.2.
 
 Concentrating Japanese in stage two instead, where stage two is 15% of the
 budget:
 
 | Model | Budget | Stage two | Japanese epochs needed |
 | --- | --- | --- | --- |
-| 0.1 B | 10 B | 1.5 B | 0.7x, Japanese does not even fill it |
-| 0.3 B | 30 B | 4.5 B | 2.1x |
-| 0.5 B | 50 B | 7.5 B | 3.5x |
-| 1.0 B | 100 B | 15 B | 7.0x |
-| 2.0 B | 200 B | 30 B | 14.1x |
+| 0.1 B | 10 B | 1.5 B | 0.6x, Japanese does not even fill it |
+| 0.3 B | 30 B | 4.5 B | 1.7x |
+| 0.5 B | 50 B | 7.5 B | 2.8x |
+| 1.0 B | 100 B | 15 B | 5.6x |
+| 2.0 B | 200 B | 30 B | 11.2x |
+| 3.0 B | 300 B | 45 B | 16.8x |
 
-The ceiling moves from 0.3 B to somewhere near 2 B.
+Reading the ceiling the other way: at 15 epochs of reuse the Japanese corpus
+supports a 2.7 B model, and at 20 epochs a 3.6 B one.
 
 So the two-stage recipe is not a refinement that buys a little loss. It is the
 difference between a Japanese corpus that bounds this project at 0.3 B
@@ -258,8 +281,16 @@ and the OSAID requires those to be under OSI-approved terms.
 
 ### Volume
 
-Measured at 2.13 B Japanese tokens, and unlikely to pass 2.5 B once the
-available candidates are added. What remains open is not the figure but two
-things downstream of it: the budget in tokens per parameter, which is a
-question about money rather than about data, and where the stage boundary
-falls, which the figure constrains but does not fix.
+Measured at 2.685 B Japanese tokens.
+
+An earlier revision of this file predicted the total would land between 2.3 and
+2.5 B once the available candidates were added. It did not: e-Gov alone was
+seven times the estimate made for it and carried the total past that range on
+its own. The lesson is narrow and worth keeping, since it has now happened
+twice in this document: estimate sizes from compressed archives at your peril,
+and measure before writing a number down.
+
+What remains open is not the figure but two things downstream of it: the budget
+in tokens per parameter, which is a question about money rather than about
+data, and where the stage boundary falls, which the figure constrains but does
+not fix.

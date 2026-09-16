@@ -6,3 +6,6 @@ wandb
 /.venv
 /.mypy_cache
 .env
+__pycache__/
+*.pyc
+.pytest_cache/

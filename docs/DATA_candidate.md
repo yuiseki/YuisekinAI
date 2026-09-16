@@ -12,11 +12,11 @@ Surveyed 2026-09-17 unless noted.
 ## Japanese, resting on Article 13
 
 Article 13 of the Copyright Act is set out in `DATA.md`. These are the sources
-that rest on it. None is in the corpus.
+that rest on it and are still outside the corpus. e-Gov laws also rest on
+Article 13 and are in `DATA.md`.
 
 | Source | Article 13 basis | Size | Blocker |
 | --- | --- | --- | --- |
-| e-Gov laws and regulations | 1 | 308 MB XML | none, ready to measure |
 | Court judgments | 3 | 4.3 GB via NII | terms of use, see below |
 | Notices and circulars, via the gazette | 2 | unknown | PDF only, see below |
 
@@ -24,32 +24,11 @@ that rest on it. None is in the corpus.
 
 | Source | Licence | Size | Blocker |
 | --- | --- | --- | --- |
-| Wikisource ja | CC BY-SA 4.0, originals often public domain | 77.4 MB bz2 | none, ready to measure |
-| Wiktionary ja | CC BY-SA 4.0 | 89.2 MB bz2 | none, ready to measure |
-| Wikibooks ja | CC BY-SA 4.0 | 28.5 MB bz2 | none, ready to measure |
-| Wikinews ja | CC BY-SA 4.0 | 9.6 MB bz2 | none, ready to measure |
-| Wikivoyage ja | CC BY-SA 4.0 | 5.8 MB bz2 | none, ready to measure |
-| Wikiquote ja | CC BY-SA 4.0 | 1.9 MB bz2 | none, ready to measure |
 | Government white papers, e-Stat | Government Standard Terms of Use 2.0, CC BY 4.0 compatible | unknown | not surveyed |
 | J-STAGE open access | CC BY and variants | unknown | licences are per journal, see below |
 | Common Corpus Japanese subset | mixed open | unknown | not investigated |
 
 ## Detail on each blocker
-
-Available now, no barrier:
-
-| Source | Where | Size | Basis |
-| --- | --- | --- | --- |
-| e-Gov laws and regulations | <https://laws.e-gov.go.jp/bulkdownload/>, 50 category files, XML | 308 MB XML | Article 13(1), plus Government Standard Terms of Use 2.0 |
-| e-Gov law API v2 | <https://laws.e-gov.go.jp/api/2/swagger-ui>, released 2025-03-19, free, no registration | per-law | same |
-| Wikisource ja | dumps.wikimedia.org, pages-articles | 77.4 MB bz2 | CC BY-SA 4.0, originals often public domain |
-| Wiktionary ja | same | 89.2 MB bz2 | CC BY-SA 4.0 |
-| Wikibooks ja | same | 28.5 MB bz2 | CC BY-SA 4.0 |
-| Wikinews ja | same | 9.6 MB bz2 | CC BY-SA 4.0 |
-| Wikivoyage ja | same | 5.8 MB bz2 | CC BY-SA 4.0 |
-| Wikiquote ja | same | 1.9 MB bz2 | CC BY-SA 4.0 |
-
-Blocked or needing work:
 
 Court judgments. Attractive in principle, since Article 13(3) puts them
 outside copyright entirely, and they would be the Japanese counterpart to the
@@ -80,16 +59,17 @@ Government white papers and e-Stat: not yet surveyed.
 
 ## What this means for the total
 
-The two immediately available groups are 308 MB of law XML and 212 MB of
-compressed Wikimedia sister projects. Neither is large next to the 7.04 GB of
-Wikipedia ja already measured. They are likely to move the Japanese total from
-2.13 B tokens to somewhere around 2.3 to 2.5 B, not past 3 B.
+Resolved on 2026-09-17. The two available groups were downloaded and measured,
+and have moved to `DATA.md`: e-Gov laws at 0.426 B tokens and the six Wikimedia
+sister projects at 0.129 B together. The Japanese total is 2.685 B.
 
-The one source that would change the total materially is the 4.3 GB of court
-judgments, and the convenient route to it is closed by its terms of use.
+The prediction made here before measuring was 2.3 to 2.5 B. It was wrong, and
+wrong because e-Gov was estimated at 60 M tokens from the compressed archive
+size and turned out to be 426 M.
 
-So the working figure for the scarcity calculation above should be treated as
-close to final rather than as a lower bound awaiting a large addition.
+Of what is left in this file, the one source that would change the total
+materially is the 4.3 GB of court judgments, and the convenient route to it is
+closed by its terms of use.
 
 ## Candidates needing a legal determination before use
 
