@@ -140,16 +140,70 @@ readily. 札幌市 and 函館市 appear in the context of 北海道 with none of
 ambiguity that scattered prose mentions carry. See the hierarchy section of
 `DATA_candidate.md`, which this finding revises.
 
+## Forcing place names: measured 2026-09-17
+
+Two SentencePiece unigram models, 16k vocabulary, byte fallback, trained on the
+same 45 MB of Japanese (30 MB of e-Gov law text plus the Japanese OSM Wiki).
+One had the 1,939 prefecture and municipality names as `user_defined_symbols`,
+the other had nothing forced.
+
+Tested on nine strings chosen because a municipality name spans a morpheme
+boundary inside them.
+
+| Input | Correct | With forcing | Control |
+| --- | --- | --- | --- |
+| 東京都市計画 | 東京 / 都市計画 | 東京都 / 市 / 計画 (wrong) | 東京 / 都市計画 |
+| 中央区分 | 中央 / 区分 | 中央区 / 分 (wrong) | 中央 / 区分 |
+| 名古屋市場 | 名古屋 / 市場 | 名 / 古 / 屋 / 市場 (wrong) | 名古屋市 / 場 (wrong) |
+| 大阪市場 | 大阪 / 市場 | 大阪 / 市場 | 大阪 / 市場 |
+| 空港区域 | 空港 / 区域 | 空港 / 区域 | 空港 / 区域 |
+| 温泉区画 | 温泉 / 区画 | 温泉 / 区画 | 温泉 / 区画 |
+| 北海道内 | 北海道 / 内 | 北海道 / 内 | 北海道 / 内 |
+
+Three wrong with forcing, one without.
+
+The mechanism is not what it first looked like. `user_defined_symbols` are not
+matched greedily ahead of segmentation: 大阪市場 stays 大阪 / 市場 even with
+大阪市 forced, so the segmenter is still choosing by score. What forcing does
+is distort the scores. A forced piece takes probability mass during EM, and
+competing segmentations weaken. 名古屋市場 shows this most clearly: with 名古屋市
+forced, 名古屋 was never learned as a piece at all and the string fell apart
+into single characters, while the control had learned 名古屋市 on its own.
+
+Which points at the real finding. Of the 1,939 names, the control model learned
+49 as single tokens unaided, almost all of them prefectures. The rest cost a
+median of five tokens each, 9,535 in total to spell the whole list.
+
+So the population splits in two, and the two halves want opposite treatment.
+
+The frequent names, prefectures and large cities, are learned without help and
+are exactly the ones that collide with ordinary words: 東京都 inside
+東京都市計画, 中央区 inside 中央区分. Forcing them buys nothing and breaks
+things.
+
+The long tail, あきる野市 and うきは市 and いちき串木野市, is never learned, costs
+five tokens every time it appears, and collides with nothing. Forcing it is
+free and is where the whole value of the idea sits.
+
+The selection rule follows: force a name only if the tokenizer does not learn
+it unaided and it does not change the segmentation of text that does not
+contain it as a place. Both halves of that are testable by training twice and
+diffing, which is what this experiment now is.
+
+Caveats. The vocabulary here is 16k against a target of 64k or more, so more
+names would be learned unaided at the real size. The training sample is
+law-heavy, which inflates 東京都 and 中央区 specifically. Nine adversarial
+strings is not a measurement of the rate on ordinary text. All three of those
+need redoing at the real vocabulary size on a balanced sample.
+
 ## Open
 
 - Vocabulary size, against measured compression on held-out Japanese prose,
   Japanese place names, world place names, OSM tag keys, law text and English
   prose.
 - Whether tier 2 earns its 39,000 slots.
-- Whether `user_defined_symbols` mis-segments: Japanese municipality names that
-  are also common nouns, 中央区 and 南区 and 府中市, could greedily match inside
-  other words, since SentencePiece matches user symbols before normal
-  segmentation.
+- The mis-segmentation rate on ordinary Japanese rather than on nine strings
+  chosen to break it, at the real vocabulary size and on a balanced sample.
 - Unigram or BPE.
 - Whether the published tokenizer and the one this model uses are the same
   artefact.
