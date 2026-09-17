@@ -398,8 +398,29 @@ Japanese Wikidata labels inherit Wikipedia article titles, so they arrive as
 They cannot simply be stripped. `Frankfurt (Oder)`, `Halle (Saale)` and
 `Brake (Unterweser)` are official German city names that appear in text with
 the parenthesis, while `14区 (ブダペスト)` and `Dainava (Kaunas)` are
-disambiguators. The two look alike and need separating before the Wikidata tier
-is usable.
+disambiguators. The two look alike.
+
+### Divergence is the point, not a defect
+
+These findings were first written up as inconsistencies to resolve, as though
+one of Taito, Taitō-ku and 台東区 had to be chosen. That was the wrong frame,
+and the two uses want opposite things.
+
+A gazetteer for measuring density wants every surface form there is. A document
+mentioning any of them mentions the place, so recall is what matters and
+redundancy costs nothing. A form that no one writes, `ナーゴルト (都市)`
+included, simply never matches; it is dead weight, not an error.
+
+Vocabulary slots are the only place a choice is forced, because each one costs
+embedding parameters. Even there the question is not which form is canonical
+but which forms occur, which is measurable rather than a matter of authority.
+
+So the collection ships the gazetteers with their disagreements intact and
+their sources attached, rather than merged into one canonical list. Wikidata's
+Taitō-ku, OSM's Taito, Natural Earth's Taito, Japanese 台東区, French
+arrondissement de Taitō: how a place is written varies by language and by
+register, and that variation is what a downstream user needs. Merging it away
+loses information that cannot be recovered.
 
 The mismatch is on the Japanese side, and it is about how people write rather
 than about any database. Counted over Japanese Wikipedia, the bare form

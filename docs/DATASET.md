@@ -146,6 +146,17 @@ Measurable languages are those Natural Earth populated places covers, which is
 Wikinews overlap it further. Everything outside that set enters as `source` or
 not at all.
 
+### Gazetteers ship unmerged
+
+The same reasoning that keeps the density threshold out of the dataset keeps
+the gazetteers unmerged. Wikidata calls 台東区 `Taitō-ku` in English, OSM and
+Natural Earth and GeoNames call it `Taito`, French has `arrondissement de
+Taitō`. Picking one would discard how the place is actually written in the
+other registers, and a downstream user cannot get that back.
+
+Each name carries its source. Divergence between sources is information about
+usage, not a defect to clean up.
+
 ### The two overlap
 
 A place-dense Japanese document belongs in both. Anyone using `-ja-tiny` and
