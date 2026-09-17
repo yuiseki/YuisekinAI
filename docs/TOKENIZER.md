@@ -349,6 +349,46 @@ A threshold of ten occurrences in Japanese Wikipedia alone selects 18,389 of
 the 63,587 candidates, which is 29% of a 64k vocabulary and leaves room for
 language.
 
+## Bare forms: the Japanese counterpart to the capitalisation test
+
+Every Japanese gazetteer here carries the administrative suffix. Geolonia has
+呉市, Natural Earth's NAME_JA has 岡山市, Wikipedia titles the article 呉市.
+OpenStreetMap does not: its admin nodes, ways and relations in Japan commonly
+carry the bare name, the same convention that gives 京都駅 the name 京都.
+
+Running text does the same. Counted over Japanese Wikipedia, the bare form
+outnumbers the suffixed one for almost every municipality: 倉敷 2.1x, 那覇 2.7x,
+小樽 3.2x, 金沢 4.4x. Matching only the suffixed form finds perhaps a third of
+the mentions.
+
+Adding the bare forms wholesale is not possible either. 関 appears 693x more
+often bare than as 関市, because it is 関する and 玄関; 光 474x, 中央 210x,
+北 111x, 国立 94x, 小林 80x as a surname, 田村 72x likewise.
+
+The ratio itself separates them, which makes it the Japanese counterpart to the
+capitalisation test used for Latin names. English marks proper nouns with a
+capital; Japanese marks administrative units with a suffix. Either way the
+question is what proportion of a string's occurrences are the place, and either
+way the writing convention answers it.
+
+Measured over 1,891 municipalities with at least 20 suffixed mentions in
+Japanese Wikipedia:
+
+| Bare-to-suffixed ratio | Municipalities | Reading |
+| --- | --- | --- |
+| <= 3x | 1,467 (78%) | the bare form is the place; safe to add |
+| 3 to 8x | 274 | needs a look |
+| 8 to 20x | 108 | risky |
+| > 20x | 42 | the bare form is mostly something else |
+
+So 78% of Japanese municipalities can have their bare form added as a
+candidate, and the 42 that cannot are identified rather than guessed at.
+
+One flaw in the extraction, not yet fixed. Geolonia's 市区町村名 includes the
+district for towns and villages, so stripping the suffix from 島尻郡渡名喜村
+gives 島尻郡渡名喜 rather than 渡名喜. Those pairs sit at exactly 1.00x because
+both forms are equally unnatural. The district prefix has to come off too.
+
 ## Open
 
 - Vocabulary size, against measured compression on held-out Japanese prose,
