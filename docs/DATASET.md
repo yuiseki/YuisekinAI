@@ -65,6 +65,41 @@ that language. Sources already to hand that `-ja-tiny` does not take:
 | OSM Wiki Proposal namespace | 1.25 M tokens | how conventions were argued |
 | Wikidata labels beyond Japanese | en 1.79 M, fr 799 k, de 692 k, nl 601 k, sv 394 k, es 375 k | CC0 |
 
+### How much of Japanese Wikipedia is geographic, measured 2026-09-17
+
+All 1,389,467 articles, counting distinct names from the 63,587-name candidate
+list per article.
+
+| Distinct places | Articles | % articles | Text | % bytes | Est. tokens |
+| --- | --- | --- | --- | --- | --- |
+| >= 1 | 1,105,850 | 79.6% | 6.13 GB | 89.6% | 1.77 B |
+| >= 2 | 786,084 | 56.6% | 4.65 GB | 68.0% | 1.34 B |
+| >= 3 | 509,366 | 36.7% | 3.59 GB | 52.4% | 1.03 B |
+| >= 5 | 234,349 | 16.9% | 2.30 GB | 33.6% | 0.66 B |
+| >= 10 | 66,154 | 4.8% | 1.05 GB | 15.4% | 0.30 B |
+| >= 20 | 17,404 | 1.3% | 0.41 GB | 6.0% | 0.12 B |
+
+Japanese Wikipedia is more geographic than expected: four articles in five name
+at least one place.
+
+At a threshold of five, Japanese Wikipedia alone contributes 0.66 B tokens to
+`-geo`. Adding the English OSM Wiki at 84.4 M, the other-language OSM Wiki
+namespaces, the Proposal namespace, e-Gov laws, which are dense by
+construction, and the qualifying part of the Wikimedia sister projects puts
+`-geo` somewhere near 1 B tokens. That stands alone.
+
+At a threshold of ten it is 0.30 B from Wikipedia and perhaps 0.4 B in total: a
+stronger claim to density, at less than half the size.
+
+An earlier run of this measurement reported 7% of bytes at a threshold of five,
+against the 33.6% here. It was measuring 170-character fragments rather than
+articles, because the extraction had concatenated articles with a blank-line
+separator and Wikipedia text contains blank lines of its own. A fragment rarely
+holds five distinct place names. The rewrite that produced the table above
+reads JSONL, one article per line, and uses `grep -F`, whose line numbers are
+document ids; it takes 43 seconds against the whole corpus, where the first
+attempt had not finished a fourteenth of it in eighteen minutes.
+
 ### The two overlap
 
 A place-dense Japanese document belongs in both. Anyone using `-ja-tiny` and
