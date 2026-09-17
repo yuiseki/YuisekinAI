@@ -113,6 +113,39 @@ That makes the grouped-listing material discussed in `DATA_candidate.md`
 available in 25 languages rather than one: a country, its subdivisions, and
 their cities, as adjacency, in the form a transformer takes up most readily.
 
+### Two reasons a document is in, and the record says which
+
+Selection is not done for the user. A threshold baked in cannot be loosened
+downstream, and different tasks want different densities, so every document
+carries its measured density and the user cuts where they like.
+
+But density can only be measured where there is a gazetteer for the language,
+and some sources are dense by construction whatever the language: a Wikivoyage
+article is a travel guide, an OSM Wiki page is documentation about mapping
+places. Excluding those for want of a gazetteer would throw away the most
+reliably geographic text in the collection.
+
+So a document is in for one of two reasons, and the record says which:
+
+| Field | Meaning |
+| --- | --- |
+| `inclusion` | `measured` or `source` |
+| `place_count` | distinct gazetteer names found, or null when not measured |
+| `gazetteer` | which gazetteer produced that count, or null |
+| `lang` | language |
+| `source` | e.g. `wikivoyage.en`, `osm_wiki.main_en`, `wikipedia.ja` |
+| `licence` | per document, since the collection mixes CC0, public domain, CC BY 4.0 and CC BY-SA |
+
+A user who trusts only measured density filters on `inclusion = measured` and
+sets their own threshold. A user who wants all the geographic text takes
+everything. Neither has to take our judgement on faith, and neither has to
+guess why a document is there.
+
+Measurable languages are those Natural Earth populated places covers, which is
+25 with no gaps. Intersected with MOT's 43 that gives 15; Wikivoyage and
+Wikinews overlap it further. Everything outside that set enters as `source` or
+not at all.
+
 ### The two overlap
 
 A place-dense Japanese document belongs in both. Anyone using `-ja-tiny` and
