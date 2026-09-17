@@ -54,10 +54,13 @@ NE_LANG = {
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--populated-places", required=True)
+    ap.add_argument("--admin-0", required=True,
+                    help="ne_10m_admin_0_countries.shp, which carries the same 25 languages")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
 
     df = pyogrio.read_dataframe(args.populated_places, read_geometry=False)
+    adm0 = pyogrio.read_dataframe(args.admin_0, read_geometry=False)
     os.makedirs(args.out, exist_ok=True)
 
     for suffix, lang in sorted(NE_LANG.items()):
@@ -69,14 +72,23 @@ def main():
             v = value.strip() if isinstance(value, str) else ""
             if v and len(v) >= min_length(v):
                 names.add(v)
-        # Country and first-level subdivision names, which every document is
-        # more likely to mention than any particular city.
-        for extra in ("ADM0NAME", "ADM1NAME"):
-            if lang == "en" and extra in df.columns:
-                for value in df[extra].tolist():
-                    v = value.strip() if isinstance(value, str) else ""
-                    if v and len(v) >= min_length(v):
-                        names.add(v)
+        # Country names in the same language. A news article names a country
+        # far more often than it names any particular city, so leaving these
+        # out of every language but English read as Ukrainian VOA mentioning a
+        # place in 46% of articles.
+        if col in adm0.columns:
+            for value in adm0[col].tolist():
+                v = value.strip() if isinstance(value, str) else ""
+                if v and len(v) >= min_length(v):
+                    names.add(v)
+
+        # First-level subdivisions, English only: Natural Earth carries
+        # ADM1NAME in English alone.
+        if lang == "en" and "ADM1NAME" in df.columns:
+            for value in df["ADM1NAME"].tolist():
+                v = value.strip() if isinstance(value, str) else ""
+                if v and len(v) >= min_length(v):
+                    names.add(v)
         path = os.path.join(args.out, f"{lang}.txt")
         with open(path, "w", encoding="utf-8") as f:
             f.write("\n".join(sorted(names)) + "\n")

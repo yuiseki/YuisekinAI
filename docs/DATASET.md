@@ -246,6 +246,48 @@ So a per-source statistic is not enough. The signal was a peer comparison, and
 anything that checks a corpus for this class of problem has to compare like
 with like rather than examine each source alone.
 
+## MOT, measured 2026-09-17
+
+25 of Multilingual Open Text's 54 archives, chosen as the ones whose language
+Natural Earth covers so that density is measurable. 5.5 GB compressed,
+2,304,188 articles, 6.41 GB of text. Voice of America, so public domain
+underneath and CC BY 4.0 as a corpus. No Japanese: VOA has not broadcast in it
+for decades.
+
+Each article JSON carries its text three times, as `paragraphs`, `sentences`
+and `tokens`. Only `paragraphs` is kept, which is most of why the archives are
+larger than the text they hold.
+
+| Source | Articles | >=1 place | >=3 | >=5 | >=10 |
+| --- | --- | --- | --- | --- | --- |
+| MOT, 25 languages | 2,304,188 | 93% | 60% | 31% | 6% |
+| Wikivoyage and Wikinews, 33 measured | 368,930 | 89% | 59% | 37% | 15% |
+
+2,673,118 measured articles in all, 2,471,912 of them naming at least one
+place, 1,596,153 naming three, 860,832 naming five.
+
+### The gazetteers had no country names outside English
+
+The first pass put MOT at 80% naming a place, with Ukrainian VOA at 46% and a
+median of one. Ukrainian news that mentions no place in more than half its
+articles is not credible, and the cause was in the gazetteer builder: country
+and subdivision names were being added for English only, so Україна, Россия,
+Ελλάδα and España were in none of their own languages' lists. A news article
+names a country far more often than it names any particular city, so the most
+frequent category was missing everywhere but English.
+
+Natural Earth's 10m admin-0 layer carries all 258 countries in the same 25
+languages, with no gaps. Adding it moved Ukrainian from 46% to 69%, Russian
+from 60% to 86%, Greek from 58% to 81%, Spanish from 69% to 93%, and English
+not at all, since English already had them. MOT overall went from 80% to 93%,
+and from 36% to 60% at three places.
+
+Four of this session's measurement errors have now had the same shape: a filter
+written without counting what it discards. The wikitext cleaner dropping
+tables, a three-character minimum dropping a fifth of the Chinese names,
+one-character names, and now country names outside English. Counting the
+discards once, at the time, would have caught all four.
+
 ## Open
 
 - The selection threshold for `-geo`, and whether the result is large enough to
