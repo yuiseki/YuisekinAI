@@ -353,10 +353,30 @@ language.
 
 Every Japanese gazetteer here carries the administrative suffix. Geolonia has
 呉市, Natural Earth's NAME_JA has 岡山市, Wikipedia titles the article 呉市.
-OpenStreetMap does not: its admin nodes, ways and relations in Japan commonly
-carry the bare name, the same convention that gives 京都駅 the name 京都.
+OpenStreetMap agrees, per language, and is worth looking at because it shows
+where the suffix lives and where it does not. Taking relation 1758888, 台東区:
 
-Running text does the same. Counted over Japanese Wikipedia, the bare form
+| Tag | Value |
+| --- | --- |
+| `name`, `name:ja` | 台東区 |
+| `name:ja-Latn` | Taitō-ku |
+| `name:zh` | 臺東區 |
+| `name:ko` | 다이토구 |
+| `name:fr` | Arrondissement de Taitō |
+| `name:en` | Taito |
+| `name:es` | Taito |
+
+The same holds for cities: 倉敷市 is `name:en=Kurashiki` and
+`name:ja-Latn=Kurashiki-Shi`, and likewise Otaru, Kure, Naha. Japanese, Chinese
+and Korean keep the suffix, romanised Japanese keeps it, French puts its own
+generic in front, and English alone drops it.
+
+So English gazetteers and English OSM names agree: Natural Earth's NAME_EN for
+these places is Okayama and Shimonoseki, bare, and so is GeoNames' asciiname.
+There is no mismatch to fix on the English side.
+
+The mismatch is on the Japanese side, and it is about how people write rather
+than about any database. Counted over Japanese Wikipedia, the bare form
 outnumbers the suffixed one for almost every municipality: 倉敷 2.1x, 那覇 2.7x,
 小樽 3.2x, 金沢 4.4x. Matching only the suffixed form finds perhaps a third of
 the mentions.
@@ -367,9 +387,9 @@ often bare than as 関市, because it is 関する and 玄関; 光 474x, 中央 
 
 The ratio itself separates them, which makes it the Japanese counterpart to the
 capitalisation test used for Latin names. English marks proper nouns with a
-capital; Japanese marks administrative units with a suffix. Either way the
-question is what proportion of a string's occurrences are the place, and either
-way the writing convention answers it.
+capital and drops the generic; Japanese has no capitals and keeps the suffix.
+Either way the question is what proportion of a string's occurrences are the
+place, and either way a writing convention answers it.
 
 Measured over 1,891 municipalities with at least 20 suffixed mentions in
 Japanese Wikipedia:
