@@ -189,6 +189,52 @@ The two-stage design says the same thing in another way. English carries the
 warmup and the stable phase, Japanese the decay. They are separate ingredients
 used at separate times, not one mixture, so they are separate artefacts too.
 
+## Wikivoyage and Wikinews, measured 2026-09-17
+
+40 dumps, 1.8 GB compressed, 21 Wikivoyage and 19 Wikinews language editions.
+Both are dense in place names by construction, so they enter `-geo` as
+`inclusion = source` where no gazetteer exists for the language, and get a
+measured density where one does.
+
+| | Pages | Articles | Wikitext |
+| --- | --- | --- | --- |
+| As converted | 2,402,502 | | 8.48 GB |
+| After removing redirects | | 1,918,198 | 8.43 GB |
+
+### Redirects were being emitted as documents
+
+`pages-articles` carries redirects as pages, and the first conversion wrote
+them out. 484,304 of 2,402,502 pages, 20.2%, and English Wikivoyage is 49.5%
+redirects. They are almost nothing in bytes, 0.05 GB, and a fifth of the
+document count, which is the number every per-document statistic is computed
+against. Fixed in `to_jsonl.py` with a test.
+
+### Russian Wikinews is not what its size suggests
+
+1,868,966 pages against 43,916 for English, a factor of 42. Mean article size
+is normal at 3,249 bytes and there are no repeated titles, so neither of the
+two anomalies seen earlier in this project explains it.
+
+The titles do. Alongside real articles there are auto-generated scaffolding
+pages: `Ожидаемые события 7 февраля 2092 года`, expected events on 7 February
+2092, one per day decades into the future; `Лента новостей 27 мая 2018 года`,
+a news feed page per date; bare date pages; yearly archives. Removing
+redirects still leaves 1.47 million.
+
+Excluded from `-geo` on those grounds. Not because it is large, but because
+most of it is scaffolding rather than text.
+
+### What the detector caught, and what it did not
+
+Four statistics were collected per dump: article count, total bytes, mean
+bytes, repeated titles. Only the article count flagged Russian Wikinews, and
+only because it could be read against the other nineteen editions. Mean bytes
+and repeated titles both looked entirely normal.
+
+So a per-source statistic is not enough. The signal was a peer comparison, and
+anything that checks a corpus for this class of problem has to compare like
+with like rather than examine each source alone.
+
 ## Open
 
 - The selection threshold for `-geo`, and whether the result is large enough to

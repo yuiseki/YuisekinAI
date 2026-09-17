@@ -50,3 +50,19 @@ def test_japanese_prose_survives():
     assert "を参照" in out
     assert "amenity=public_bath" in out
     assert "銭湯" in out
+
+
+def test_redirects_are_not_documents():
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src" / "data" / "wikimedia"))
+    from to_jsonl import is_redirect
+
+    # pages-articles carries redirects as pages. Emitting them inflates the
+    # article count and fills the corpus with one-line stubs.
+    assert is_redirect("#REDIRECT[[Категория:Летние Олимпийские игры 2016]]")
+    assert is_redirect("#redirect [[Tokyo]]")
+    assert is_redirect("  #REDIRECT [[Paris]]")
+    assert is_redirect("#перенаправление [[Москва]]")
+    assert not is_redirect("Tokyo is the capital of Japan.")
+    assert not is_redirect("{{дата|7 января 2016}} Some real article text")
