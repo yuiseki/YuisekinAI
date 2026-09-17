@@ -59,11 +59,38 @@ To be adoptable on its own it needs three things beyond the text:
   document is in.
 - A frozen, citable artefact. A dataset that grows quietly cannot be cited.
 
+## The English side is referenced, not bundled
+
+`YuisekinText-tiny` is Japanese. The English half of the training recipe is the
+Common Pile, and it stays a pointer to <https://huggingface.co/datasets/common-pile/comma_v0.1_training_dataset>
+rather than a copy inside this dataset.
+
+Three reasons.
+
+It would add bytes without adding content. The Common Pile is published and
+maintained by EleutherAI; a copy of 500 GB alongside 2.685 B tokens of Japanese
+adds volume to the artefact and nothing to it.
+
+It would blur what the thing is. "The openly licensed Japanese corpus" is
+citable. "The openly licensed Japanese corpus, plus a copy of someone else's
+English one" is not a thing with a name.
+
+And it would move a risk upstream that belongs upstream. The Comma model card
+says plainly that "license laundering and inaccurate metadata can result in
+erroneous license information in the Common Pile" and that they "cannot make a
+guarantee that Comma v0.1-2T was trained exclusively on openly licensed text".
+Redistributing it means making that licence assertion ourselves. Pointing at it
+leaves the assertion with the people who can maintain it.
+
+The two-stage design says the same thing in another way. English carries the
+warmup and the stable phase, Japanese the decay. They are separate ingredients
+used at separate times, not one mixture, so they are separate artefacts too.
+
 ## Open
 
 - The selection threshold for `-geo`, and whether the result is large enough to
   stand alone. Being measured.
 - Whether the token counts quoted are stated against a named tokenizer. They
   are tokenizer-dependent, and the figures so far use Qwen3 as an instrument.
-- Whether the English side is part of `YuisekinText-tiny` or stays a pointer to
-  the Common Pile.
+- The selection threshold for `-geo` and whether `-geo` needs its own English
+  side, or is Japanese-only like its parent.
