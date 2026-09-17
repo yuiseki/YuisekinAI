@@ -41,6 +41,7 @@ segments naturally.
 | --- | --- | --- |
 | Natural Earth admin-0, name_en and name_ja | ~350 | public domain |
 | Natural Earth admin-1, name_en and name_ja | ~9,000 | public domain |
+| Natural Earth populated places, name_en and name_ja | 14,237, of which 6,088 new | public domain |
 | Geolonia, prefectures and municipalities | 1,939 | CC BY 4.0 |
 | GeoNames admin1 | 4,323 | CC BY 4.0 |
 | GeoNames cities15000, name and asciiname | 38,769 | CC BY 4.0 |
@@ -75,6 +76,29 @@ These are established Japanese renderings, 四川省 and ヘルダーラント�
 The file covers every kind of OSM-linked feature, not only administrative
 units, so it holds universities, stations and mountains alongside places and
 needs filtering through the gazetteer rather than being used whole.
+
+### Natural Earth populated places
+
+Measured 2026-09-17. 7,342 cities, 137 columns, and unusually for a gazetteer
+there are no gaps: all 25 language columns are populated for every row, against
+Wikidata's 46% coverage for Japanese. Public domain, so not even attribution is
+owed.
+
+| Cut | Names | New against the candidate list |
+| --- | --- | --- |
+| NAME_EN only | 7,106 | 1,898 |
+| NAME_EN + NAME_JA | 14,237 | 6,088 |
+| plus the native NAME | 15,150 | 6,686 |
+| all 25 languages | 101,526 | 92,240 |
+
+English and Japanese add 6,088 names for a 10% growth of the candidate list,
+which is cheap for guaranteed-complete public domain data. All 25 languages
+would take the list past 150,000 and fit no vocabulary; that cut belongs to
+`YuisekinText-geo` rather than to the tokenizer.
+
+`ADM0NAME` and `ADM1NAME` carry the containment hierarchy for every row: 228
+countries and 2,527 first-level subdivisions, with Japan's 69 cities across 44
+of them.
 
 ### Tiers
 

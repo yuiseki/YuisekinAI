@@ -64,6 +64,7 @@ that language. Sources already to hand that `-ja-tiny` does not take:
 | OSM Wiki, DE RU ES FR IT NL namespaces | 104 MB wikitext | counted and skipped during the Japanese extraction |
 | OSM Wiki Proposal namespace | 1.25 M tokens | how conventions were argued |
 | Wikidata labels beyond Japanese | en 1.79 M, fr 799 k, de 692 k, nl 601 k, sv 394 k, es 375 k | CC0 |
+| Natural Earth populated places | 7,342 cities, 101,526 name strings across 25 languages, no gaps | public domain |
 
 ### How much of Japanese Wikipedia is geographic, measured 2026-09-17
 
@@ -99,6 +100,18 @@ holds five distinct place names. The rewrite that produced the table above
 reads JSONL, one article per line, and uses `grep -F`, whose line numbers are
 document ids; it takes 43 seconds against the whole corpus, where the first
 attempt had not finished a fourteenth of it in eighteen minutes.
+
+### The multilingual gazetteer
+
+Natural Earth populated places is the spine of it: 7,342 cities named in 25
+languages with no missing values, plus `ADM0NAME` and `ADM1NAME` giving
+containment for every row, 228 countries and 2,527 first-level subdivisions.
+Public domain, so it can be redistributed with no attribution obligation at
+all, which nothing else here allows.
+
+That makes the grouped-listing material discussed in `DATA_candidate.md`
+available in 25 languages rather than one: a country, its subdivisions, and
+their cities, as adjacency, in the form a transformer takes up most readily.
 
 ### The two overlap
 
