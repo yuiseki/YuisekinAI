@@ -371,9 +371,35 @@ The same holds for cities: 倉敷市 is `name:en=Kurashiki` and
 and Korean keep the suffix, romanised Japanese keeps it, French puts its own
 generic in front, and English alone drops it.
 
-So English gazetteers and English OSM names agree: Natural Earth's NAME_EN for
-these places is Okayama and Shimonoseki, bare, and so is GeoNames' asciiname.
-There is no mismatch to fix on the English side.
+Natural Earth's NAME_EN for these places is Okayama and Shimonoseki, bare, and
+so is GeoNames' asciiname, so those agree with OSM.
+
+Wikidata does not. Its English label for 台東区 is `Taitō-ku`, keeping the
+romanised suffix that OSM, Natural Earth and GeoNames all drop. So there are
+three English forms in circulation for the same place and this collection holds
+two of them:
+
+| Source | English for 台東区 |
+| --- | --- |
+| Wikidata | Taitō-ku |
+| OpenStreetMap `name:en` | Taito |
+| Natural Earth, GeoNames | Taito |
+
+### Wikidata labels carry Wikipedia's disambiguators
+
+1,075 of the 63,587 candidates contain a parenthesis, and they concentrate in
+the Wikidata-derived tier: 1,015 of 13,588, 7.5%, against 0.2% for GeoNames and
+none at all for Natural Earth.
+
+Japanese Wikidata labels inherit Wikipedia article titles, so they arrive as
+`ライド (イギリスの都市)`, `ムーラ市 (スウェーデン)`, `ナーゴルト (都市)`,
+`ハンメルフェスト (町)`. None of those will ever match running text.
+
+They cannot simply be stripped. `Frankfurt (Oder)`, `Halle (Saale)` and
+`Brake (Unterweser)` are official German city names that appear in text with
+the parenthesis, while `14区 (ブダペスト)` and `Dainava (Kaunas)` are
+disambiguators. The two look alike and need separating before the Wikidata tier
+is usable.
 
 The mismatch is on the Japanese side, and it is about how people write rather
 than about any database. Counted over Japanese Wikipedia, the bare form
