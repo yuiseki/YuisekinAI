@@ -59,3 +59,18 @@ def test_ordinary_words_that_are_also_places_are_flagged():
 def test_rare_names_are_not_judged():
     # A ratio computed from a handful of occurrences says nothing.
     assert not is_mostly_lowercase("Obscureville", 9, 1)
+
+
+def test_cjk_place_names_survive_at_two_characters():
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src" / "data" / "gazetteer"))
+    from per_language import min_length
+
+    # A flat three-character minimum drops 19% of Chinese names and 14% of
+    # Korean, which read as Chinese Wikivoyage having almost no place names.
+    for name in ["北京", "上海", "東京", "香港", "서울"]:
+        assert len(name) >= min_length(name)
+    # Latin still needs three: two-letter tokens match everywhere.
+    assert min_length("Paris") == 3
+    assert len("As") < min_length("As")
