@@ -288,6 +288,39 @@ tables, a three-character minimum dropping a fifth of the Chinese names,
 one-character names, and now country names outside English. Counting the
 discards once, at the time, would have caught all four.
 
+## Gazetteers from the UN system, 2026-09-17
+
+Statistical bodies publish place names as a by-product of needing to count
+things, which makes them a source with different coverage and different
+conventions from the mapping gazetteers.
+
+| Source | Contents | Size | Licence |
+| --- | --- | --- | --- |
+| UN/LOCODE | trade and transport locations: ports, airports, rail and road terminals, border crossings | 116,214 rows | UNECE, published freely |
+| UN/LOCODE subdivisions | first-level subdivision codes | 4,679 rows | same |
+| UNSD M49 | world, region, sub-region and country names in all six UN languages | 247 rows x 6 | UN |
+| HDX COD-AB Global | subnational administrative boundaries and names | 1.13 GB geodatabase | CC BY-IGO |
+| HDX COD catalogue | 364 datasets with their licences | metadata | mixed |
+
+UN/LOCODE carries both `Name` and `NameWoDiacritics`, two spellings of the same
+place, which is the kind of variation this collection wants rather than a
+duplicate to collapse. Its locations are also of a kind the other gazetteers do
+not hold: a port or a border crossing is not a populated place.
+
+M49 needed extracting rather than downloading. The UNSD page has no API and no
+CSV; `jquery.treetable` renders all six languages into one document behind the
+anchors ARB, CHN, ENG, ESP, FRA and RUS. One fetch gets 247 rows in each, and
+each row carries the whole chain from world through region and sub-region to
+country, with M49 codes. `wooorm/un-m49` on GitHub is English only.
+
+CC BY-IGO is new to this collection and needs recording as such. It is the
+intergovernmental-organisation variant of CC BY: open, attribution-based, but
+not identical to CC BY in its dispute provisions and not an OSI-approved
+licence. 344 of the 364 HDX COD datasets carry it, 12 carry plain CC BY, 6 are
+`hdx-other` and 2 state none. Only the global dataset is taken here, so the
+last two groups do not arise yet; per-country downloads would need checking one
+at a time.
+
 ## Open
 
 - The selection threshold for `-geo`, and whether the result is large enough to
